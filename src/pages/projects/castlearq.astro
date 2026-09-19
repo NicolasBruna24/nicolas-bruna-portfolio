@@ -1,0 +1,828 @@
+---
+import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.astro';
+import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
+import FlowChain from '../../components/project/FlowChain.astro';
+import ProjectActions from '../../components/project/ProjectActions.astro';
+import { castleArq } from '../../data/castlearq';
+import type { CapabilityStatus } from '../../data/castlearq';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const {
+  problem,
+  idea,
+  howItWorks,
+  architecture,
+  decisions,
+  modelSelection,
+  systemChanges,
+  currentState,
+  roadmap,
+  learned,
+  closing,
+} = castleArq;
+
+/** Two-digit display index for the section headers. */
+const pad = (index: number): string => String(index + 1).padStart(2, '0');
+
+const statusLabels: Record<CapabilityStatus, string> = {
+  'in-place': 'In place',
+  'in-development': 'In development',
+};
+---
+
+<BaseLayout title={castleArq.seo.title} description={castleArq.seo.description} type="article">
+  <CaseStudyHero
+    name={castleArq.name}
+    eyebrow={castleArq.eyebrow}
+    subtitle={castleArq.summary}
+    tagline={castleArq.tagline}
+    intro={castleArq.intro}
+    tags={castleArq.tags}
+    actions={castleArq.actions}
+    scrollTargetId="problem"
+    backHref={closing.backHref}
+    backLabel="Selected work"
+  />
+
+  <section class="section" id="problem" aria-labelledby="problem-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">01</p>
+        <h2 class="section__title" id="problem-title">{problem.heading}</h2>
+        <p class="cs-statement">{problem.statement}</p>
+      </header>
+
+      <div class="cs-split">
+        <div class="prose" data-reveal>
+          {problem.body.map((paragraph) => <p>{paragraph}</p>)}
+          <ul class="cs-tools">
+            {problem.tools.map((tool) => <li class="chip">{tool}</li>)}
+          </ul>
+        </div>
+
+        <div class="cs-figure" data-reveal>
+          <FlowChain steps={problem.chain} ariaLabel="Decision sequence" />
+          <p class="cs-caption">{problem.chainCaption}</p>
+        </div>
+      </div>
+
+      <p class="cs-closing" data-reveal>{problem.closing}</p>
+    </div>
+  </section>
+
+  <section class="section" id="idea" aria-labelledby="idea-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">02</p>
+        <h2 class="section__title" id="idea-title">{idea.heading}</h2>
+      </header>
+
+      <div class="cs-split">
+        <div class="prose" data-reveal>
+          {idea.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+
+        <div class="cs-figure" data-reveal>
+          <FlowChain steps={idea.flow} ariaLabel="Conceptual flow" />
+        </div>
+      </div>
+
+      <p class="note" data-reveal>{idea.note}</p>
+    </div>
+  </section>
+  <section class="section" id="how-it-works" aria-labelledby="how-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">03</p>
+        <h2 class="section__title" id="how-title">{howItWorks.heading}</h2>
+        <p class="section__lead">{howItWorks.lead}</p>
+      </header>
+
+      <div class="cs-measure" data-reveal>
+        <FlowChain steps={howItWorks.stages} variant="detailed" />
+      </div>
+
+      <p class="note" data-reveal>{howItWorks.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="architecture" aria-labelledby="architecture-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">04</p>
+        <h2 class="section__title" id="architecture-title">{architecture.heading}</h2>
+        <p class="section__lead">{architecture.lead}</p>
+      </header>
+
+      <div class="cs-measure">
+        <ArchitectureDiagram groups={architecture.groups} />
+      </div>
+
+      <p class="cs-caption" data-reveal>{architecture.caption}</p>
+    </div>
+  </section>
+
+  <section class="section" id="decisions" aria-labelledby="decisions-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">05</p>
+        <h2 class="section__title" id="decisions-title">{decisions.heading}</h2>
+        <p class="section__lead">{decisions.lead}</p>
+      </header>
+
+      <ol class="decisions">
+        {
+          decisions.items.map((item, index) => (
+            <li class="decisions__item" data-reveal>
+              <span class="decisions__index" aria-hidden="true">
+                {pad(index)}
+              </span>
+              <div class="decisions__body">
+                <h3 class="decisions__title">{item.title}</h3>
+                <p class="decisions__text">{item.body}</p>
+
+                {item.figure === 'pipeline' && (
+                  <div class="pipeline">
+                    <p class="cs-label">{decisions.pipelineLabel}</p>
+                    <ol class="pipeline__list">
+                      {decisions.pipeline.map((stage, stageIndex) => (
+                        <li class="pipeline__item">
+                          <span class="pipeline__stage">{stage}</span>
+                          {stageIndex < decisions.pipeline.length - 1 && (
+                            <span class="pipeline__arrow" aria-hidden="true">
+                              →
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {item.figure === 'runtime-tree' && (
+                  <div class="tree">
+                    <p class="tree__node">{decisions.runtimeTree.root}</p>
+                    <span class="tree__arrow" aria-hidden="true">
+                      ↓
+                    </span>
+                    <p class="tree__node">{decisions.runtimeTree.layer}</p>
+                    <ul class="tree__branches">
+                      {decisions.runtimeTree.runtimes.map((runtime, runtimeIndex) => (
+                        <li class="tree__branch">
+                          <span class="tree__glyph" aria-hidden="true">
+                            {runtimeIndex === decisions.runtimeTree.runtimes.length - 1
+                              ? '└──'
+                              : '├──'}
+                          </span>
+                          {runtime}
+                        </li>
+                      ))}
+                    </ul>
+                    <p class="cs-caption">{decisions.runtimeNote}</p>
+                  </div>
+                )}
+
+                {item.figure === 'compatibility' && (
+                  <div class="compare">
+                    {decisions.compatibility.map((pair) => (
+                      <div class="compare__part">
+                        <p class="compare__label">{pair.label}</p>
+                        <p class="compare__text">{pair.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+  <section class="section" id="models" aria-labelledby="models-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">06</p>
+        <h2 class="section__title" id="models-title">{modelSelection.heading}</h2>
+        <p class="section__lead">{modelSelection.lead}</p>
+      </header>
+
+      <dl class="criteria">
+        {
+          modelSelection.criteria.map((criterion) => (
+            <div class="criteria__row" data-reveal>
+              <dt class="criteria__name">{criterion.name}</dt>
+              <dd class="criteria__text">{criterion.description}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="cs-caption" data-reveal>{modelSelection.criteriaNote}</p>
+
+      <div class="suit" data-reveal>
+        <div class="suit__inputs">
+          <div class="suit__col">
+            <p class="cs-label">{modelSelection.labels.resources}</p>
+            <ul class="suit__list">
+              {modelSelection.inputs.resources.map((item) => <li class="chip">{item}</li>)}
+            </ul>
+          </div>
+
+          <span class="suit__op" aria-hidden="true">+</span>
+
+          <div class="suit__col">
+            <p class="cs-label">{modelSelection.labels.characteristics}</p>
+            <ul class="suit__list">
+              {modelSelection.inputs.characteristics.map((item) => <li class="chip">{item}</li>)}
+            </ul>
+          </div>
+        </div>
+
+        <span class="suit__arrow" aria-hidden="true">↓</span>
+        <p class="suit__result">{modelSelection.labels.result}</p>
+      </div>
+
+      <p class="note" data-reveal>{modelSelection.resultNote}</p>
+    </div>
+  </section>
+
+  <section class="section" id="compatibility" aria-labelledby="compatibility-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">07</p>
+        <h2 class="section__title" id="compatibility-title">{systemChanges.heading}</h2>
+      </header>
+
+      <p class="cs-lede" data-reveal>{systemChanges.body}</p>
+
+      <div class="compare" data-reveal>
+        {
+          systemChanges.pairs.map((pair) => (
+            <div class="compare__part">
+              <p class="compare__label">{pair.label}</p>
+              <p class="compare__text">{pair.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="note" data-reveal>{systemChanges.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="state" aria-labelledby="state-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">08</p>
+        <h2 class="section__title" id="state-title">{currentState.heading}</h2>
+        <p class="section__lead">{currentState.lead}</p>
+      </header>
+
+      <ul class="state">
+        {
+          currentState.capabilities.map((capability) => (
+            <li class="state__item" data-reveal>
+              <p class="state__name">{capability.name}</p>
+              <p class="state__text">{capability.description}</p>
+              <span class="chip state__status">{statusLabels[capability.status]}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="note" data-reveal>{currentState.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="roadmap" aria-labelledby="roadmap-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">09</p>
+        <h2 class="section__title" id="roadmap-title">{roadmap.heading}</h2>
+        <p class="section__lead">{roadmap.lead}</p>
+      </header>
+
+      <ol class="roadmap" data-reveal>
+        {
+          roadmap.stages.map((stage, index) => (
+            <li class="roadmap__item">
+              <span class="roadmap__stage">{stage}</span>
+              {index < roadmap.stages.length - 1 && (
+                <span class="roadmap__arrow" aria-hidden="true">
+                  →
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="note" data-reveal>{roadmap.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="learned" aria-labelledby="learned-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">10</p>
+        <h2 class="section__title" id="learned-title">{learned.heading}</h2>
+        <p class="cs-statement">{learned.statement}</p>
+      </header>
+
+      <p class="cs-lede" data-reveal>{learned.body}</p>
+
+      <ul class="area-list" data-reveal>
+        {learned.areas.map((area) => <li class="chip">{area}</li>)}
+      </ul>
+
+      <blockquote class="quote" data-reveal>
+        <p>{learned.quote}</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="closing" id="cta" aria-labelledby="closing-title">
+    <div class="container">
+      <h2 class="closing__title" id="closing-title" data-reveal>{closing.heading}</h2>
+      <p class="closing__body" data-reveal>{closing.body}</p>
+
+      <div class="closing__actions" data-reveal>
+        <ProjectActions
+          actions={castleArq.actions}
+          pendingNote="The repository and the documentation will be linked here once they are public."
+        />
+      </div>
+
+      <a class="closing__back" href={closing.backHref} data-reveal>
+        <span aria-hidden="true">←</span>
+        {closing.backLabel}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ------------------------------------------------- case-study primitives */
+  /* Case-study sections reuse `.section`, `.section__header`, `.eyebrow` and
+     `.chip` from the global layer; only what is specific to a project page
+     lives here. */
+
+  .cs-statement {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .cs-lede {
+    display: grid;
+    gap: var(--space-4);
+    max-width: var(--measure);
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-prose {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cs-prose p {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-2);
+  }
+
+  .cs-split {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .cs-measure {
+    max-width: 52rem;
+  }
+
+  .cs-figure {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  /* Editorial aside: one hairline on the inline start, no box. */
+  .cs-note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-6);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .cs-closing {
+    max-width: var(--measure);
+    margin-block-start: var(--space-8);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  @media (min-width: 64rem) {
+    .cs-split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+      align-items: start;
+    }
+  }
+  /* ------------------------------------------------------- decisions list */
+  .decisions {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .decisions__item {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .decisions__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .decisions__body {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .decisions__title {
+    font-size: var(--text-xl);
+  }
+
+  .decisions__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  /* One responsibility per stage, as a single mono line. */
+  .pipeline {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-start: var(--space-3);
+  }
+
+  .pipeline__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    align-items: center;
+  }
+
+  .pipeline__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .pipeline__stage {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .pipeline__arrow,
+  .roadmap__arrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+
+  /* Runtime abstraction, drawn as a small file tree. */
+  .tree {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    margin-block-start: var(--space-3);
+  }
+
+  .tree__node {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+  }
+
+  .tree__arrow {
+    margin-inline-start: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+
+  .tree__branches {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .tree__branch {
+    display: flex;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+
+  .tree__glyph {
+    color: var(--color-text-muted);
+  }
+
+  /* Two questions that must not be conflated. */
+  .compare {
+    display: grid;
+    gap: var(--space-6);
+    margin-block-start: var(--space-4);
+  }
+
+  .compare__part {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .compare__label {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+  }
+
+  .compare__text {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  /* ----------------------------------------------------- model selection */
+  .criteria {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .criteria__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .criteria__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .suit {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 52rem;
+    margin-block-start: var(--space-8);
+  }
+
+  .suit__inputs {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .suit__col {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .suit__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .suit__op,
+  .suit__arrow {
+    justify-self: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-md);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+
+  .suit__result {
+    justify-self: stretch;
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .decisions__item {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+
+    .decisions__index {
+      padding-block-start: 0.4em;
+    }
+
+    .compare {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+
+    .criteria__row {
+      display: grid;
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: baseline;
+    }
+
+    .suit__inputs {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-4);
+    }
+
+    .suit__op {
+      align-self: center;
+    }
+  }
+  /* --------------------------------------------------- current state list */
+  .state {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .state__item {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .state__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .state__text {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .state__status {
+    justify-self: start;
+  }
+
+  /* ----------------------------------------------------------- roadmap */
+  .roadmap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    max-width: 52rem;
+  }
+
+  .roadmap__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .roadmap__stage {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  /* ------------------------------------------------------ what I learned */
+  .area-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    max-width: 52rem;
+    margin-block-start: var(--space-6);
+  }
+
+  .quote {
+    max-width: var(--measure);
+    margin-block-start: var(--space-8);
+    padding-inline-start: var(--space-6);
+    border-inline-start: 2px solid var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    text-wrap: balance;
+  }
+
+  /* -------------------------------------------------------- closing CTA */
+  .closing {
+    padding-block: var(--section-space);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .closing__title {
+    max-width: 24ch;
+    font-size: var(--text-2xl);
+    text-wrap: balance;
+  }
+
+  .closing__body {
+    max-width: var(--measure);
+    margin-block-start: var(--space-5);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .closing__actions {
+    margin-block-start: var(--space-6);
+  }
+
+  .closing__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .closing__back:hover {
+    color: var(--color-text);
+  }
+
+  /* Hairline between rows of every long list on the page. */
+  .decisions__item:not(:first-child),
+  .state__item:not(:first-child),
+  .criteria__row:not(:first-child) {
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .state__item {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+      gap: var(--space-6);
+      align-items: baseline;
+    }
+
+    .state__status {
+      justify-self: end;
+    }
+  }
+</style>

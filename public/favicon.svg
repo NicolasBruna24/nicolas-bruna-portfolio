@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Nicolás Bruna">
+  <rect width="32" height="32" rx="7" fill="#0A0A0A" />
+  <path
+    d="M9.5 23V9l13 8.2V9"
+    fill="none"
+    stroke="#60A5FA"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <circle cx="24" cy="24" r="1.5" fill="#F5F5F5" />
+</svg>

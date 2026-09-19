@@ -1,0 +1,97 @@
+---
+import { processSteps } from '../../data/process';
+---
+
+<section class="story section" id="process" aria-labelledby="process-title">
+  <div class="container">
+    <header class="section__header">
+      <p class="eyebrow">Process</p>
+      <h2 class="section__title" id="process-title">From problem to shipped software</h2>
+      <p class="section__lead">
+        A quiet loop: understand the problem, test the idea early, build it for real and keep
+        improving what shipped.
+      </p>
+    </header>
+
+    <ol class="story__list">
+      {
+        processSteps.map((step) => (
+          <li class="story__step" data-reveal>
+            <span class="story__index" aria-hidden="true">
+              {step.index}
+            </span>
+            <div class="story__body">
+              <h3 class="story__title">{step.title}</h3>
+              <p class="story__text">{step.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* A single thin rail with one marker per step: the flow reads downward. */
+  .story__list {
+    --rail-offset: var(--space-5);
+    display: grid;
+    gap: var(--space-7);
+    padding-inline-start: var(--rail-offset);
+    border-inline-start: 1px solid var(--color-border);
+  }
+
+  .story__step {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  /* Marker centred on the rail: left edge is (rail offset + dot radius). */
+  .story__step::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.5em;
+    inset-inline-start: calc(-1 * var(--rail-offset) - 3.5px);
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-text-muted);
+    transition: background-color var(--duration-slow) var(--ease-out);
+  }
+
+  .story__step.is-revealed::before {
+    background-color: var(--color-accent);
+  }
+
+  .story__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .story__title {
+    font-size: var(--text-xl);
+  }
+
+  .story__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  @media (min-width: 48rem) {
+    .story__list {
+      --rail-offset: var(--space-6);
+    }
+
+    .story__step {
+      grid-template-columns: 4rem minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+
+    .story__index {
+      padding-block-start: 0.4em;
+    }
+  }
+</style>

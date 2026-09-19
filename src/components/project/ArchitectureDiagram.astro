@@ -1,0 +1,150 @@
+---
+import type { ArchitectureGroup } from '../../data/castlearq';
+
+interface Props {
+  groups: ArchitectureGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+{/*
+  The pipeline is an ordered list with one nested list per responsibility band,
+  so the sequence and the grouping are both real structure. Node separators and
+  the arrows between bands are decoration.
+*/}
+<ol class="arch">
+  {
+    groups.map((group, groupIndex) => (
+      <li
+        class:list={[
+          'arch__group',
+          { 'arch__group--core': group.core, 'arch__group--external': group.external },
+        ]}
+        data-reveal
+      >
+        <p class="arch__label">{group.label}</p>
+        <ol class="arch__nodes">
+          {group.nodes.map((node, nodeIndex) => (
+            <li class="arch__node">
+              {node}
+              {nodeIndex < group.nodes.length - 1 && (
+                <span class="arch__arrow arch__arrow--inline" aria-hidden="true">
+                  →
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+        {groupIndex < groups.length - 1 && (
+          <span class="arch__arrow arch__arrow--band" aria-hidden="true">
+            ↓
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .arch {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .arch__group {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  /* The CastleArq layer itself is the only filled band; the wording of the
+     label carries the same meaning, so the fill is reinforcement. */
+  .arch__group--core {
+    background-color: var(--color-surface);
+    border-color: var(--color-text-muted);
+  }
+
+  /* Concrete runtimes live outside CastleArq: dashed edge plus the explicit
+     "(external)" wording in the label, never colour alone. */
+  .arch__group--external {
+    border-style: dashed;
+  }
+
+  .arch__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  /* The rectangles are the layers themselves: they carry the structure. */
+  .arch__nodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  .arch__node {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .arch__arrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+
+  .arch__arrow--band {
+    justify-self: center;
+    opacity: 0.8;
+    animation: arch-flow 4.2s var(--ease-in-out) infinite;
+  }
+
+  @keyframes arch-flow {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: translateY(-2px);
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(2px);
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    /* Stack the band vertically and turn the separators downwards: readable
+       without horizontal scrolling at 390px. */
+    .arch__nodes {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .arch__arrow--inline {
+      transform: rotate(90deg);
+      align-self: center;
+      margin-inline-start: var(--space-3);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .arch__group {
+      padding: var(--space-6);
+    }
+  }
+</style>

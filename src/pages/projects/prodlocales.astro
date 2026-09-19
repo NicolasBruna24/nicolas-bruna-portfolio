@@ -1,0 +1,507 @@
+---
+import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.astro';
+import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
+import FlowChain from '../../components/project/FlowChain.astro';
+import ProjectActions from '../../components/project/ProjectActions.astro';
+import { prodLocales } from '../../data/prodlocales';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const {
+  statusSection,
+  problem,
+  idea,
+  howItWorks,
+  architecture,
+  decisions,
+  dataFlow,
+  currentState,
+  learned,
+  closing,
+} = prodLocales;
+
+/** Two-digit display index for the section headers. */
+const pad = (index: number): string => String(index + 1).padStart(2, '0');
+---
+
+<BaseLayout
+  title={prodLocales.seo.title}
+  description={prodLocales.seo.description}
+  type="article"
+>
+  <CaseStudyHero
+    name={prodLocales.name}
+    eyebrow={prodLocales.eyebrow}
+    status={prodLocales.status}
+    subtitle={prodLocales.summary}
+    tagline={prodLocales.tagline}
+    intro={prodLocales.intro}
+    tags={prodLocales.tags}
+    actions={prodLocales.actions}
+    scrollTargetId="status"
+    backHref={closing.backHref}
+    backLabel="Selected work"
+  />
+
+  <section class="section" id="status" aria-labelledby="status-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">Status</p>
+        <h2 class="section__title" id="status-title">{statusSection.heading}</h2>
+        <p class="pl-statement">{statusSection.statement}</p>
+      </header>
+
+      <p class="cs-lede" data-reveal>{statusSection.body}</p>
+    </div>
+  </section>
+
+  <section class="section" id="problem" aria-labelledby="problem-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">01</p>
+        <h2 class="section__title" id="problem-title">{problem.heading}</h2>
+        <p class="pl-statement">{problem.statement}</p>
+      </header>
+
+      <div class="prose" data-reveal>
+        {problem.body.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <p class="sc-closing" data-reveal>{problem.closing}</p>
+    </div>
+  </section>
+
+  <section class="section" id="idea" aria-labelledby="idea-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">02</p>
+        <h2 class="section__title" id="idea-title">{idea.heading}</h2>
+      </header>
+
+      <div class="pl-split">
+        <div class="prose" data-reveal>
+          {idea.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+
+        <div class="cs-figure" data-reveal>
+          <FlowChain steps={idea.flow} ariaLabel="Conceptual flow" />
+        </div>
+      </div>
+
+      <p class="note" data-reveal>{idea.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="how-it-works" aria-labelledby="how-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">03</p>
+        <h2 class="section__title" id="how-title">{howItWorks.heading}</h2>
+        <p class="section__lead">{howItWorks.lead}</p>
+      </header>
+
+      <div class="cs-measure" data-reveal>
+        <FlowChain steps={howItWorks.stages} variant="detailed" />
+      </div>
+
+      <p class="note" data-reveal>{howItWorks.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="architecture" aria-labelledby="architecture-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">04</p>
+        <h2 class="section__title" id="architecture-title">{architecture.heading}</h2>
+        <p class="section__lead">{architecture.lead}</p>
+      </header>
+
+      <div class="cs-measure">
+        <ArchitectureDiagram groups={architecture.groups} />
+      </div>
+
+      <p class="cs-caption" data-reveal>{architecture.caption}</p>
+    </div>
+  </section>
+
+  <section class="section" id="decisions" aria-labelledby="decisions-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">05</p>
+        <h2 class="section__title" id="decisions-title">{decisions.heading}</h2>
+        <p class="section__lead">{decisions.lead}</p>
+      </header>
+
+      <ol class="pl-decisions">
+        {
+          decisions.items.map((item, index) => (
+            <li class="pl-decision" data-reveal>
+              <span class="pl-decision__index" aria-hidden="true">
+                {pad(index)}
+              </span>
+              <div class="pl-decision__body">
+                <h3 class="pl-decision__title">{item.title}</h3>
+                <p class="pl-decision__text">{item.body}</p>
+                <dl class="pl-decision__terms">
+                  <div class="pl-decision__term">
+                    <dt>Why</dt>
+                    <dd>{item.why}</dd>
+                  </div>
+                  <div class="pl-decision__term">
+                    <dt>Consequence</dt>
+                    <dd>{item.consequence}</dd>
+                  </div>
+                </dl>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="data-flow" aria-labelledby="data-flow-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">06</p>
+        <h2 class="section__title" id="data-flow-title">{dataFlow.heading}</h2>
+        <p class="section__lead">{dataFlow.lead}</p>
+      </header>
+
+      <div class="cs-measure" data-reveal>
+        <FlowChain steps={dataFlow.chain} ariaLabel="Product data flow" />
+      </div>
+      <p class="cs-caption" data-reveal>{dataFlow.chainCaption}</p>
+
+      <p class="note" data-reveal>{dataFlow.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="state" aria-labelledby="state-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">07</p>
+        <h2 class="section__title" id="state-title">{currentState.heading}</h2>
+        <p class="section__lead">{currentState.lead}</p>
+      </header>
+
+      <div class="pl-state">
+        {
+          currentState.groups.map((group) => (
+            <div class="pl-state__group" data-reveal>
+              <p class="pl-state__label">{group.label}</p>
+              <ul class="pl-state__items">
+                {group.items.map((item) => (
+                  <li class="pl-state__item">
+                    <p class="pl-state__name">{item.name}</p>
+                    <p class="pl-state__text">{item.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="note" data-reveal>{currentState.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="learned" aria-labelledby="learned-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">08</p>
+        <h2 class="section__title" id="learned-title">{learned.heading}</h2>
+        <p class="pl-statement">{learned.statement}</p>
+      </header>
+
+      <p class="cs-lede" data-reveal>{learned.body}</p>
+
+      <ul class="area-list" data-reveal>
+        {learned.areas.map((area) => <li class="chip">{area}</li>)}
+      </ul>
+
+      <blockquote class="quote" data-reveal>
+        <p>{learned.quote}</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="closing" id="cta" aria-labelledby="closing-title">
+    <div class="container">
+      <h2 class="closing__title" id="closing-title" data-reveal>{closing.heading}</h2>
+      <p class="closing__body" data-reveal>{closing.body}</p>
+
+      <div class="closing__actions" data-reveal>
+        <ProjectActions
+          actions={prodLocales.actions}
+          pendingNote={prodLocales.pendingNote}
+        />
+      </div>
+
+      <a class="closing__back" href={closing.backHref} data-reveal>
+        <span aria-hidden="true">←</span>
+        {closing.backLabel}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Case-study sections reuse `.section`, `.section__header`, `.eyebrow`,
+     `.chip` and the shared case-study vocabulary; only what is specific to
+     this project lives here. Paused, not redesigned: the visual language is
+     the one established by the CastleArq and SnapContext pages. */
+
+  .pl-statement {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .cs-lede {
+    max-width: var(--measure);
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-prose {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cs-prose p {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-figure {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .pl-split {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .cs-measure {
+    max-width: 52rem;
+  }
+
+  .sc-closing {
+    max-width: var(--measure);
+    margin-block-start: var(--space-7);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+  }
+
+  .cs-note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-6);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+
+  .pl-decisions {
+    display: grid;
+  }
+
+  .pl-decision {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .pl-decision__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .pl-decision__title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+
+  .pl-decision__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .pl-decision__terms {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-start: var(--space-2);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 2px solid var(--color-border);
+  }
+
+  .pl-decision__term {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .pl-decision__terms dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .pl-decision__terms dd {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* ------------------------------------------------------- current state */
+  /* Three labelled groups (Built / Paused / Not published) separated by
+     hairlines, not cards. The labels carry the meaning; the layout only
+     supports it. */
+  .pl-state {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .pl-state__group {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .pl-state__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .pl-state__items {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .pl-state__item {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .pl-state__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .pl-state__text {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .area-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    max-width: 52rem;
+    margin-block-start: var(--space-6);
+  }
+
+  .quote {
+    max-width: var(--measure);
+    margin-block-start: var(--space-8);
+    padding-inline-start: var(--space-6);
+    border-inline-start: 2px solid var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    text-wrap: balance;
+  }
+
+  .closing {
+    padding-block: var(--section-space);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .closing__title {
+    max-width: 28ch;
+    font-size: var(--text-2xl);
+    text-wrap: balance;
+  }
+
+  .closing__body {
+    max-width: var(--measure);
+    margin-block-start: var(--space-5);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .closing__actions {
+    margin-block-start: var(--space-6);
+  }
+
+  .closing__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .closing__back:hover {
+    color: var(--color-text);
+  }
+
+  .pl-decision:not(:first-child),
+  .pl-state__item:not(:first-child) {
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .pl-split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .pl-state {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-8);
+    }
+
+    .pl-decision__terms {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+</style>

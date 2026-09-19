@@ -1,0 +1,57 @@
+---
+interface Props {
+  /** Id of the section the cue points at. */
+  targetId: string;
+  /** Extra words for the accessible name, e.g. "to the process section". */
+  hint: string;
+  label?: string;
+}
+
+const { targetId, hint, label = 'Scroll' } = Astro.props;
+---
+
+{/* Shared by the homepage hero and the case-study hero. */}
+<a class="scroll-cue" href={`#${targetId}`}>
+  <span>{label}<span class="u-visually-hidden"> {hint}</span></span>
+  <span class="scroll-cue__line" aria-hidden="true"></span>
+</a>
+
+<style>
+  .scroll-cue {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .scroll-cue:hover {
+    color: var(--color-text);
+  }
+
+  .scroll-cue__line {
+    inline-size: 1px;
+    block-size: clamp(2.5rem, 6vh, 4rem);
+    background-color: var(--color-accent);
+    transform-origin: top center;
+    animation: scroll-cue-hint 2.8s var(--ease-in-out) infinite;
+  }
+
+  @keyframes scroll-cue-hint {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scaleY(0.4);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+</style>

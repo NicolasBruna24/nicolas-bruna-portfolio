@@ -1,0 +1,63 @@
+---
+import NavLinks from './NavLinks.astro';
+import { navigation, site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__identity">
+      <p class="footer__name">{site.name}</p>
+      <p class="footer__meta">{site.role} · {site.focus}</p>
+    </div>
+
+    <NavLinks items={navigation} ariaLabel="Footer" />
+
+    <p class="footer__legal">© {year} {site.name}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-8) var(--space-7);
+  }
+
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .footer__meta {
+    margin-block-start: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .footer__legal {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: var(--space-8);
+    }
+
+    .footer__legal {
+      grid-column: 1 / -1;
+      justify-self: end;
+    }
+  }
+</style>

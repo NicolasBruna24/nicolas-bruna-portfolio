@@ -1,0 +1,65 @@
+---
+import type { ProjectAction } from '../../data/castlearq';
+
+interface Props {
+  actions: ProjectAction[];
+  /** Shown only while at least one action has no public URL yet. */
+  pendingNote?: string;
+}
+
+const { actions, pendingNote = 'Repository and documentation links are not public yet.' } =
+  Astro.props;
+
+const hasPending = actions.some((action) => action.href === null);
+---
+
+<ul class="actions">
+  {
+    actions.map((action) => (
+      <li class="actions__item">
+        {action.href ? (
+          <a class="btn btn--primary" href={action.href}>
+            {action.label}
+          </a>
+        ) : (
+          <span class="btn btn--ghost actions__pending" title="Link not available yet">
+            {action.label}
+            <span class="u-visually-hidden"> — link not available yet</span>
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+{hasPending && <p class="actions__note">{pendingNote}</p>}
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* Not a link yet: dashed border and no hover lift, so the pending state is
+     readable without relying on colour alone. */
+  .actions__pending {
+    border-style: dashed;
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: default;
+  }
+
+  .actions__pending:hover {
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+    transform: none;
+  }
+
+  .actions__note {
+    margin-block-start: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+</style>

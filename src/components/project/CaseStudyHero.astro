@@ -1,0 +1,170 @@
+---
+import ScrollCue from '../ScrollCue.astro';
+import ProjectActions from './ProjectActions.astro';
+import type { ProjectAction } from '../../data/castlearq';
+
+interface Props {
+  name: string;
+  /** Small label above the title, e.g. "Case study". */
+  eyebrow?: string;
+  subtitle: string;
+  tagline: string;
+  intro: string;
+  tags: string[];
+  actions: ProjectAction[];
+  /** Id of the first section, used by the scroll cue. */
+  scrollTargetId: string;
+  backHref?: string;
+  backLabel?: string;
+  /**
+   * Project status shown beside the eyebrow, e.g. "Paused". Optional: the
+   * active projects do not pass it, so their heroes render exactly as before.
+   */
+  status?: string;
+}
+
+const {
+  name,
+  eyebrow,
+  subtitle,
+  tagline,
+  intro,
+  tags,
+  actions,
+  scrollTargetId,
+  backHref,
+  backLabel,
+  status,
+} = Astro.props;
+---
+
+{/* Same shape as the homepage hero: label, display title, mono subtitle,
+    tagline, then metadata and actions near the bottom of the viewport. */}
+<section class="cs-hero">
+  <div class="container cs-hero__inner">
+    <div class="cs-hero__top" data-reveal>
+      {
+        backHref && backLabel && (
+          <a class="cs-hero__back" href={backHref}>
+            <span aria-hidden="true">←</span> {backLabel}
+          </a>
+        )
+      }
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      {status && (
+        <p class="cs-hero__status">
+          <span class="u-visually-hidden">Project status: </span>
+          {status}
+        </p>
+      )}
+    </div>
+
+    <div class="cs-hero__content">
+      <h1 class="cs-hero__title" data-reveal data-reveal-delay="1">{name}</h1>
+      <p class="cs-hero__subtitle" data-reveal data-reveal-delay="2">{subtitle}</p>
+      <p class="cs-hero__tagline" data-reveal data-reveal-delay="2">{tagline}</p>
+      <p class="cs-hero__intro" data-reveal data-reveal-delay="3">{intro}</p>
+
+      <ul class="cs-hero__tags" data-reveal data-reveal-delay="3">
+        {tags.map((tag) => <li class="chip">{tag}</li>)}
+      </ul>
+
+      <div class="cs-hero__actions" data-reveal data-reveal-delay="4">
+        <ProjectActions actions={actions} />
+      </div>
+    </div>
+
+    <ScrollCue targetId={scrollTargetId} hint="to the next section" />
+  </div>
+</section>
+
+<style>
+  .cs-hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-7);
+    min-height: clamp(38rem, 90svh, 62rem);
+    padding-block: calc(var(--nav-height) + var(--space-6)) var(--space-7);
+  }
+
+  /* Keeps the back link at the top while the statement sits low, as on the
+     homepage. */
+  .cs-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-block-end: auto;
+  }
+
+  .cs-hero__back {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .cs-hero__back:hover {
+    color: var(--color-text);
+  }
+
+  /* Project status (e.g. "Paused"): same pill language as the homepage
+     previews, deliberately neutral — the status is information, not an alarm. */
+  .cs-hero__status {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .cs-hero__content {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cs-hero__title {
+    font-size: var(--text-hero);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+
+  .cs-hero__subtitle {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .cs-hero__tagline {
+    max-width: var(--measure);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+
+  .cs-hero__intro {
+    max-width: var(--measure);
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-2);
+  }
+
+  .cs-hero__actions {
+    margin-block-start: var(--space-2);
+  }
+</style>

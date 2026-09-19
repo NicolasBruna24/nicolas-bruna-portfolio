@@ -1,0 +1,27 @@
+---
+import ProjectPreview from './ProjectPreview.astro';
+import { selectedProjects } from '../../data/projects';
+---
+
+<section class="work section" id="work" aria-labelledby="work-title">
+  <div class="container">
+    <header class="section__header">
+      <p class="eyebrow">Work</p>
+      <h2 class="section__title" id="work-title">Selected Work</h2>
+      <p class="section__lead">
+        Three projects, three case studies. CastleArq and SnapContext are in active development;
+        ProdLocales is paused.
+      </p>
+    </header>
+
+    <ul class="work__list">
+      {selectedProjects.map((project) => <ProjectPreview project={project} />)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .work__list {
+    display: grid;
+  }
+</style>

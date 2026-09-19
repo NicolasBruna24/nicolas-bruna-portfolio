@@ -1,0 +1,253 @@
+---
+import ScrollCue from '../components/ScrollCue.astro';
+import { contact } from '../data/contact';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { hero, seo, email, github, categories, closing } = contact;
+---
+
+<BaseLayout title={seo.title} description={seo.description} type="website">
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <p class="eyebrow" data-reveal>Contact</p>
+        <h1 class="hero__title" data-reveal data-reveal-delay="1">{hero.heading}</h1>
+        <p class="hero__subtitle" data-reveal data-reveal-delay="2">{hero.subtitle}</p>
+        <p class="hero__intro" data-reveal data-reveal-delay="3">{hero.intro}</p>
+      </div>
+
+      <ScrollCue targetId="reach-me" hint="to the contact details section" />
+    </div>
+  </section>
+
+  <section class="section" id="reach-me" aria-labelledby="reach-me-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">01</p>
+        <h2 class="section__title" id="reach-me-title">Reach me</h2>
+      </header>
+
+      <div class="email-block" data-reveal>
+        <p class="email-block__label">Email — the fastest way to reach me</p>
+        <a class="email-block__address" href={email.href} aria-label={email.label}>
+          {email.address}
+        </a>
+      </div>
+
+      <dl class="rows" data-reveal>
+        <div class="rows__item">
+          <dt class="rows__term">{github.label}</dt>
+          <dd class="rows__detail">
+            <a class="text-link" href={github.href}>{github.handle}</a>
+            <span class="rows__note">Explore the code before writing.</span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="about-contact" aria-labelledby="about-contact-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">02</p>
+        <h2 class="section__title" id="about-contact-title">{categories.heading}</h2>
+      </header>
+
+      <dl class="rows">
+        {
+          categories.items.map((item) => (
+            <div class="rows__item" data-reveal>
+              <dt class="rows__term">{item.title}</dt>
+              <dd class="rows__detail">{item.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p class="note" data-reveal>{categories.note}</p>
+    </div>
+  </section>
+
+  <section class="closing" aria-labelledby="closing-title">
+    <div class="container">
+      <h2 class="closing__title" id="closing-title" data-reveal>{closing.heading}</h2>
+      <p class="closing__body" data-reveal>{closing.body}</p>
+      <div class="closing__actions" data-reveal>
+        <a class="btn btn--primary" href={email.href} aria-label={email.label}>
+          {email.address}
+        </a>
+        <a class="btn btn--ghost" href="/#work">Projects</a>
+        <a class="btn btn--ghost" href="/about">About</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Page-local layout. Type, buttons, sections and eyebrows come from the
+     global layer; editorial patterns mirror the about page. */
+
+  .hero {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-8);
+    padding-block: calc(var(--nav-height) + var(--space-8)) var(--space-7);
+  }
+
+  .hero__content {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .hero__title {
+    max-width: 16ch;
+    font-size: clamp(2.25rem, 1.2rem + 5.5vw, 4.75rem);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+  }
+
+  .hero__subtitle {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    text-wrap: balance;
+  }
+
+  .hero__intro {
+    max-width: var(--measure);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  /* The email address is the main visual element: large display type that
+     wraps safely on narrow screens instead of overflowing. */
+  .email-block {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .email-block__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .email-block__address {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.9rem + 3.5vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    overflow-wrap: anywhere;
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .email-block__address:hover {
+    color: var(--color-accent);
+  }
+
+  .rows {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .rows__item {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .rows__item:not(:first-child) {
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: var(--space-6);
+  }
+
+  .rows__term {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .rows__detail {
+    display: grid;
+    gap: var(--space-1);
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .rows__note {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .text-link {
+    width: fit-content;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .text-link:hover {
+    color: var(--color-accent);
+  }
+
+  .note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-6);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .closing {
+    padding-block: var(--section-space);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .closing__title {
+    max-width: 26ch;
+    font-size: var(--text-2xl);
+    text-wrap: balance;
+  }
+
+  .closing__body {
+    max-width: var(--measure);
+    margin-block-start: var(--space-5);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .closing__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .rows__item {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--space-6);
+      align-items: baseline;
+    }
+  }
+</style>

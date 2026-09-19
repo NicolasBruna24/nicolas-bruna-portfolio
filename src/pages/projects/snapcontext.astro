@@ -1,0 +1,564 @@
+---
+import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.astro';
+import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
+import FlowChain from '../../components/project/FlowChain.astro';
+import ProjectActions from '../../components/project/ProjectActions.astro';
+import { snapContext } from '../../data/snapcontext';
+import type { CapabilityStatus } from '../../data/castlearq';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const {
+  problem,
+  idea,
+  howItWorks,
+  architecture,
+  decisions,
+  aiContext,
+  ecosystem,
+  currentState,
+  learned,
+  closing,
+} = snapContext;
+
+/** Two-digit display index for the section headers. */
+const pad = (index: number): string => String(index + 1).padStart(2, '0');
+
+const statusLabels: Record<CapabilityStatus, string> = {
+  'in-place': 'In place',
+  'in-development': 'In development',
+};
+---
+
+<BaseLayout title={snapContext.seo.title} description={snapContext.seo.description} type="article">
+  <CaseStudyHero
+    name={snapContext.name}
+    eyebrow={snapContext.eyebrow}
+    subtitle={snapContext.summary}
+    tagline={snapContext.tagline}
+    intro={snapContext.intro}
+    tags={snapContext.tags}
+    actions={snapContext.actions}
+    scrollTargetId="problem"
+    backHref={closing.backHref}
+    backLabel="Selected work"
+  />
+
+  <section class="section" id="problem" aria-labelledby="problem-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">01</p>
+        <h2 class="section__title" id="problem-title">{problem.heading}</h2>
+        <p class="sc-statement">{problem.statement}</p>
+      </header>
+
+      <div class="prose" data-reveal>
+        {problem.body.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <p class="sc-closing" data-reveal>{problem.closing}</p>
+    </div>
+  </section>
+
+  <section class="section" id="idea" aria-labelledby="idea-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">02</p>
+        <h2 class="section__title" id="idea-title">{idea.heading}</h2>
+      </header>
+
+      <div class="sc-split">
+        <div class="prose" data-reveal>
+          {idea.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+
+        <div class="cs-figure" data-reveal>
+          <FlowChain steps={idea.flow} ariaLabel="Conceptual flow" />
+        </div>
+      </div>
+
+      <p class="note" data-reveal>{idea.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="how-it-works" aria-labelledby="how-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">03</p>
+        <h2 class="section__title" id="how-title">{howItWorks.heading}</h2>
+        <p class="section__lead">{howItWorks.lead}</p>
+      </header>
+
+      <div class="cs-measure" data-reveal>
+        <FlowChain steps={howItWorks.stages} variant="detailed" />
+      </div>
+
+      <p class="note" data-reveal>{howItWorks.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="architecture" aria-labelledby="architecture-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">04</p>
+        <h2 class="section__title" id="architecture-title">{architecture.heading}</h2>
+        <p class="section__lead">{architecture.lead}</p>
+      </header>
+
+      <div class="cs-measure">
+        <ArchitectureDiagram groups={architecture.groups} />
+      </div>
+
+      <p class="cs-caption" data-reveal>{architecture.caption}</p>
+    </div>
+  </section>
+
+  <section class="section" id="decisions" aria-labelledby="decisions-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">05</p>
+        <h2 class="section__title" id="decisions-title">{decisions.heading}</h2>
+        <p class="section__lead">{decisions.lead}</p>
+      </header>
+
+      <ol class="sc-decisions">
+        {
+          decisions.items.map((item, index) => (
+            <li class="sc-decision" data-reveal>
+              <span class="sc-decision__index" aria-hidden="true">
+                {pad(index)}
+              </span>
+              <div class="sc-decision__body">
+                <h3 class="sc-decision__title">{item.title}</h3>
+                <p class="sc-decision__text">{item.body}</p>
+                <dl class="sc-decision__terms">
+                  <div class="sc-decision__term">
+                    <dt>Why</dt>
+                    <dd>{item.why}</dd>
+                  </div>
+                  <div class="sc-decision__term">
+                    <dt>Consequence</dt>
+                    <dd>{item.consequence}</dd>
+                  </div>
+                </dl>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="ai-context" aria-labelledby="ai-context-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">06</p>
+        <h2 class="section__title" id="ai-context-title">{aiContext.heading}</h2>
+        <p class="section__lead">{aiContext.lead}</p>
+      </header>
+
+      <div class="cs-measure" data-reveal>
+        <FlowChain steps={aiContext.chain} ariaLabel="Context stages" />
+      </div>
+      <p class="cs-caption" data-reveal>{aiContext.chainCaption}</p>
+
+      <div class="compare" data-reveal>
+        {
+          aiContext.pairs.map((pair) => (
+            <div class="compare__part">
+              <p class="compare__label">{pair.label}</p>
+              <p class="compare__text">{pair.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="note" data-reveal>{aiContext.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="ecosystem" aria-labelledby="ecosystem-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">07</p>
+        <h2 class="section__title" id="ecosystem-title">{ecosystem.heading}</h2>
+        <p class="section__lead">{ecosystem.lead}</p>
+      </header>
+
+      <div class="sc-split">
+        <div class="prose" data-reveal>
+          {ecosystem.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+
+        <div class="cs-figure" data-reveal>
+          <ul class="sc-surfaces">
+            {ecosystem.surfaces.map((surface) => <li class="chip">{surface}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="sc-actions" data-reveal>
+        <ProjectActions actions={ecosystem.actions} pendingNote={ecosystem.pendingNote} />
+      </div>
+
+      <p class="note" data-reveal>{ecosystem.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="state" aria-labelledby="state-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">08</p>
+        <h2 class="section__title" id="state-title">{currentState.heading}</h2>
+        <p class="section__lead">{currentState.lead}</p>
+      </header>
+
+      <ul class="state">
+        {
+          currentState.capabilities.map((capability) => (
+            <li class="state__item" data-reveal>
+              <p class="state__name">{capability.name}</p>
+              <p class="state__text">{capability.description}</p>
+              <span class="chip state__status">{statusLabels[capability.status]}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="note" data-reveal>{currentState.note}</p>
+    </div>
+  </section>
+
+  <section class="section" id="learned" aria-labelledby="learned-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">09</p>
+        <h2 class="section__title" id="learned-title">{learned.heading}</h2>
+        <p class="sc-statement">{learned.statement}</p>
+      </header>
+
+      <p class="cs-lede" data-reveal>{learned.body}</p>
+
+      <ul class="area-list" data-reveal>
+        {learned.areas.map((area) => <li class="chip">{area}</li>)}
+      </ul>
+
+      <blockquote class="quote" data-reveal>
+        <p>{learned.quote}</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="closing" id="cta" aria-labelledby="closing-title">
+    <div class="container">
+      <h2 class="closing__title" id="closing-title" data-reveal>{closing.heading}</h2>
+      <p class="closing__body" data-reveal>{closing.body}</p>
+
+      <div class="closing__actions" data-reveal>
+        <ProjectActions
+          actions={snapContext.actions}
+          pendingNote="Project links are shown above; the marketplace listings will be added here once they are public."
+        />
+      </div>
+
+      <a class="closing__back" href={closing.backHref} data-reveal>
+        <span aria-hidden="true">←</span>
+        {closing.backLabel}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Case-study sections reuse `.section`, `.section__header`, `.eyebrow`,
+     `.chip` and the shared `.cs-*` primitives from the CastleArq page; only
+     what is specific to this project lives here. The visual vocabulary is
+     kept identical across case studies without a shared stylesheet. */
+
+  .sc-statement {
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .sc-lede {
+    max-width: var(--measure);
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-prose {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cs-prose p {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-figure {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .sc-split {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .cs-measure {
+    max-width: 52rem;
+  }
+
+  /* Editorial aside: one hairline on the inline start, no box. */
+  .cs-note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-6);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .cs-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+
+  .sc-closing {
+    max-width: var(--measure);
+    margin-block-start: var(--space-7);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+  }
+
+  /* ------------------------------------------------ technical decisions */
+  .sc-decisions {
+    display: grid;
+  }
+
+  .sc-decision {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .sc-decision__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .sc-decision__title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+
+  .sc-decision__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  /* Decision -> Why -> Consequence as a definition list, so the structure is
+     readable by assistive technology and not only visual. */
+  .sc-decision__terms {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-start: var(--space-2);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 2px solid var(--color-border);
+  }
+
+  .sc-decision__term {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .sc-decision__terms dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .sc-decision__terms dd {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* ------------------------------------------- what context means (pairs) */
+  .compare {
+    display: grid;
+    gap: var(--space-6);
+    margin-block-start: var(--space-7);
+    padding-block: var(--space-6);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .compare__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .compare__text {
+    max-width: var(--measure);
+    margin-block-start: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  /* ------------------------------------------------------- where it runs */
+  .sc-surfaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .sc-actions {
+    margin-block-start: var(--space-6);
+  }
+
+  /* --------------------------------------------- current state + learned */
+  .state {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .state__item {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .state__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .state__text {
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .state__status {
+    justify-self: start;
+  }
+
+  .area-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    max-width: 52rem;
+    margin-block-start: var(--space-6);
+  }
+
+  .quote {
+    max-width: var(--measure);
+    margin-block-start: var(--space-8);
+    padding-inline-start: var(--space-6);
+    border-inline-start: 2px solid var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    text-wrap: balance;
+  }
+
+  /* -------------------------------------------------------- closing CTA */
+  .closing {
+    padding-block: var(--section-space);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .closing__title {
+    max-width: 26ch;
+    font-size: var(--text-2xl);
+    text-wrap: balance;
+  }
+
+  .closing__body {
+    max-width: var(--measure);
+    margin-block-start: var(--space-5);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .closing__actions {
+    margin-block-start: var(--space-6);
+  }
+
+  .closing__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-start: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .closing__back:hover {
+    color: var(--color-text);
+  }
+
+  /* Hairline between rows of every long list on the page. */
+  .sc-decision:not(:first-child),
+  .state__item:not(:first-child) {
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .sc-split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .state__item {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+      gap: var(--space-6);
+      align-items: baseline;
+    }
+
+    .state__status {
+      justify-self: end;
+    }
+
+    .compare {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-8);
+    }
+
+    .sc-decision__terms {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+</style>

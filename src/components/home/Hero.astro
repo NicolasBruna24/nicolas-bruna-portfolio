@@ -1,0 +1,95 @@
+---
+import ScrollCue from '../ScrollCue.astro';
+import { site } from '../../data/site';
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <h1 class="hero__title">
+        <span class="hero__name" data-reveal>{site.name}</span>
+        <span class="hero__role">
+          <span class="hero__role-line" data-reveal data-reveal-delay="1">Software</span>
+          <span class="hero__role-line" data-reveal data-reveal-delay="2">Developer</span>
+        </span>
+      </h1>
+
+      <p class="hero__focus" data-reveal data-reveal-delay="3">{site.focus}</p>
+      <p class="hero__tagline" data-reveal data-reveal-delay="3">{site.tagline}</p>
+
+      <div class="hero__actions" data-reveal data-reveal-delay="4">
+        <a class="btn btn--primary" href="#work">View selected work</a>
+      </div>
+    </div>
+
+    <ScrollCue targetId="process" hint="to the process section" />
+  </div>
+</section>
+
+<style>
+  /* Generous, full-height opening statement: type sits low, air stays on top. */
+  .hero {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-8);
+    padding-block: calc(var(--nav-height) + var(--space-8)) var(--space-7);
+  }
+
+  .hero__content {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .hero__title {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .hero__name {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .hero__role {
+    display: grid;
+    font-size: var(--text-hero);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .hero__role-line {
+    display: block;
+  }
+
+  .hero__focus {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .hero__tagline {
+    max-width: var(--measure);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .hero__actions {
+    margin-block-start: var(--space-2);
+  }
+</style>

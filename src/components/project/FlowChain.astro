@@ -1,0 +1,139 @@
+---
+import type { FlowStep } from '../../data/castlearq';
+
+interface Props {
+  steps: FlowStep[];
+  /** `compact` = labels only, `detailed` = indexed stages with explanations. */
+  variant?: 'compact' | 'detailed';
+  ariaLabel?: string;
+}
+
+const { steps, variant = 'compact', ariaLabel } = Astro.props;
+
+const label = (index: number): string => String(index + 1).padStart(2, '0');
+---
+
+{/*
+  A flow is an ordered list, so its order is real structure rather than a
+  drawing: the rail, the markers and the arrows are decoration only.
+*/}
+<ol class={`chain chain--${variant}`} aria-label={ariaLabel}>
+  {
+    steps.map((step, index) => (
+      <li class="chain__step" data-reveal>
+        <span class="chain__index" aria-hidden="true">
+          {label(index)}
+        </span>
+        <div class="chain__body">
+          <p class="chain__title">{step.title}</p>
+          {step.description && <p class="chain__text">{step.description}</p>}
+        </div>
+        {index < steps.length - 1 && (
+          <span class="chain__arrow" aria-hidden="true">
+            ↓
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  /* Same rail and marker language as the homepage process section, with an
+     arrow in the gap between steps to make the direction explicit. */
+  .chain {
+    --rail-offset: var(--space-5);
+    --chain-gap: var(--space-5);
+    display: grid;
+    gap: var(--chain-gap);
+    padding-inline-start: var(--rail-offset);
+    border-inline-start: 1px solid var(--color-border);
+  }
+
+  .chain--detailed {
+    --chain-gap: var(--space-7);
+  }
+
+  .chain__step {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .chain--compact .chain__step {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+
+  /* Marker centred on the rail: left edge is (rail offset + dot radius). */
+  .chain__step::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.45em;
+    inset-inline-start: calc(-1 * var(--rail-offset) - 3.5px);
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-text-muted);
+    transition: background-color var(--duration-slow) var(--ease-out);
+  }
+
+  .chain__step.is-revealed::before {
+    background-color: var(--color-accent);
+  }
+
+  .chain__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .chain__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+
+  .chain--compact .chain__title {
+    font-size: var(--text-md);
+  }
+
+  .chain--detailed .chain__title {
+    font-size: var(--text-xl);
+  }
+
+  .chain__text {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+  }
+
+  .chain__arrow {
+    position: absolute;
+    inset-block-end: calc(-0.5 * var(--chain-gap) - 0.5em);
+    inset-inline-start: calc(-1 * var(--rail-offset) - 0.375em);
+    inline-size: 0.75em;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1;
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 48rem) {
+    .chain {
+      --rail-offset: var(--space-6);
+    }
+
+    .chain--detailed .chain__step {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: var(--space-6);
+    }
+
+    .chain--detailed .chain__index {
+      padding-block-start: 0.4em;
+    }
+  }
+</style>

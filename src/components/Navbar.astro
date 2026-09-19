@@ -1,0 +1,136 @@
+---
+import NavLinks from './NavLinks.astro';
+import { navigation, site } from '../data/site';
+---
+
+<header class="navbar" data-navbar>
+  <div class="container navbar__inner">
+    <a class="navbar__brand" href="/">{site.name}</a>
+
+    <div class="navbar__desktop">
+      <NavLinks items={navigation} ariaLabel="Primary" />
+    </div>
+
+    <button
+      class="navbar__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-menu-toggle
+    >
+      <span data-menu-toggle-label>Menu</span>
+    </button>
+  </div>
+
+  <div class="navbar__panel" id="site-menu" data-menu-panel>
+    <div class="container">
+      <NavLinks items={navigation} variant="stacked" ariaLabel="Mobile" />
+    </div>
+  </div>
+</header>
+
+{/*
+  Without JavaScript the disclosure button cannot work, so it is hidden instead
+  of being shown as an inert control. The footer repeats the same navigation
+  links, keeping every destination reachable without JavaScript.
+*/}
+<noscript>
+  <style>
+    @media (max-width: 47.99rem) {
+      [data-menu-toggle] {
+        display: none;
+      }
+    }
+  </style>
+</noscript>
+
+<style>
+  /* Fixed and visually light at the top; a translucent surface once scrolled. */
+  .navbar {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--z-nav);
+    background-color: transparent;
+    border-block-end: 1px solid transparent;
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .navbar.is-scrolled {
+    background-color: var(--color-bg-translucent);
+    border-block-end-color: var(--color-border);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .navbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    block-size: var(--nav-height);
+  }
+
+  .navbar__brand {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .navbar__desktop {
+    display: none;
+  }
+
+  .navbar__toggle {
+    padding-block: var(--space-2);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .navbar__toggle:hover {
+    color: var(--color-text);
+  }
+
+  /* Mobile panel: visibility keeps it out of the tab order while closed. */
+  .navbar__panel {
+    position: fixed;
+    inset-block-start: var(--nav-height);
+    inset-inline: 0;
+    z-index: var(--z-menu);
+    padding-block: var(--space-6);
+    background-color: var(--color-surface);
+    border-block-end: 1px solid var(--color-border);
+    box-shadow: var(--shadow-panel);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, -0.5rem, 0);
+    transition-property: opacity, transform, visibility;
+    transition-duration: var(--duration-base);
+    transition-timing-function: var(--ease-out);
+    transition-delay: 0s, 0s, var(--duration-base);
+  }
+
+  .navbar__panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  /* Desktop navigation */
+  @media (min-width: 48rem) {
+    .navbar__desktop {
+      display: block;
+    }
+
+    .navbar__toggle,
+    .navbar__panel {
+      display: none;
+    }
+  }
+</style>

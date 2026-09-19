@@ -1,0 +1,138 @@
+---
+import type { ProjectPreview as ProjectPreviewData } from '../../data/projects';
+
+interface Props {
+  project: ProjectPreviewData;
+}
+
+const { project } = Astro.props;
+
+// Projects with a route are real links; the rest stay as previews. The dynamic
+// tag keeps the row markup in one place instead of duplicating it per case.
+const isCaseStudy = project.href !== null;
+const Row = (isCaseStudy ? 'a' : 'div') as 'a';
+---
+
+<li class="project" data-reveal>
+  <Row class="project__row" href={isCaseStudy ? project.href : undefined}>
+    <span class="project__index" aria-hidden="true">{project.index}</span>
+    <span class="project__name">{project.name}</span>
+    {project.summary && <span class="project__summary">{project.summary}</span>}
+    <span class="project__meta">
+      {
+        isCaseStudy ? (
+          <span class="project__status">
+            {project.status ?? 'Case study'}
+            {project.status && (
+              <span class="u-visually-hidden"> — case study available; project paused</span>
+            )}
+          </span>
+        ) : (
+          <span class="project__status">
+            Soon<span class="u-visually-hidden"> — case study not published yet</span>
+          </span>
+        )
+      }
+      <span class="project__arrow" aria-hidden="true">→</span>
+    </span>
+  </Row>
+</li>
+
+<style>
+  .project {
+    border-block-start: 1px solid var(--color-border);
+    transition: background-color var(--duration-base) var(--ease-out);
+  }
+
+  .project:hover,
+  .project:focus-within {
+    background-color: var(--color-surface);
+  }
+
+  .project__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'index meta'
+      'name name'
+      'summary summary';
+    gap: var(--space-2) var(--space-6);
+    padding-block: var(--space-6);
+  }
+
+  .project__index {
+    grid-area: index;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+
+  .project__name {
+    grid-area: name;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .project:hover .project__name,
+  .project:focus-within .project__name {
+    color: var(--color-accent);
+  }
+
+  .project__summary {
+    grid-area: summary;
+    max-width: var(--measure);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .project__meta {
+    grid-area: meta;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    justify-self: end;
+  }
+
+  .project__status {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .project__arrow {
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+    transition:
+      color var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+
+  .project:hover .project__arrow,
+  .project:focus-within .project__arrow {
+    color: var(--color-accent);
+    transform: translateX(0.35rem);
+  }
+
+  @media (min-width: 48rem) {
+    .project__row {
+      grid-template-columns: 3.5rem minmax(0, 1fr) auto auto;
+      grid-template-areas: 'index name summary meta';
+      align-items: center;
+      gap: var(--space-6);
+      padding-block: var(--space-7);
+    }
+
+    .project__meta {
+      gap: var(--space-5);
+    }
+  }
+</style>

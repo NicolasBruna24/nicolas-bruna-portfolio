@@ -1,0 +1,33 @@
+---
+import type { NavItem } from '../data/site';
+
+interface Props {
+  items: NavItem[];
+  /** `inline` for the navbar/footer rows, `stacked` for the mobile panel. */
+  variant?: 'inline' | 'stacked';
+  ariaLabel?: string;
+}
+
+const { items, variant = 'inline', ariaLabel = 'Primary' } = Astro.props;
+---
+
+<nav class="nav" aria-label={ariaLabel}>
+  <ul class={`nav-list nav-list--${variant}`}>
+    {
+      items.map((item) => (
+        <li class="nav-list__item">
+          {item.href ? (
+            <a class="nav-list__link" href={item.href}>
+              {item.label}
+            </a>
+          ) : (
+            <span class="nav-list__link nav-list__link--planned" title="Coming in a later phase">
+              {item.label}
+              <span class="u-visually-hidden"> (not available yet)</span>
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</nav>
