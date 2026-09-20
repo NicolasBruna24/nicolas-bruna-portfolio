@@ -167,11 +167,10 @@ export const castleArq: CastleArqContent = {
     description:
       'CastleArq is an open-source platform exploring a simpler way to configure and run local AI based on hardware, software and model requirements.',
   },
-  // TODO: replace `null` with the public URLs once the repository and the
-  // documentation site are published. Nothing is linked until then.
+  // Repository and documentation URLs are public.
   actions: [
-    { label: 'View on GitHub', href: null },
-    { label: 'Documentation', href: null },
+    { label: 'View on GitHub', href: 'https://github.com/NicolasBruna24/castlearq' },
+    { label: 'Documentation', href: 'https://github.com/NicolasBruna24/castlearq/blob/main/README.md' },
   ],
 
   problem: {
