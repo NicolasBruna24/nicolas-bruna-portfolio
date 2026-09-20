@@ -33,8 +33,7 @@ export const site: SiteConfig = {
   focus: 'Full Stack · AI · Linux',
   tagline: 'I build software that solves real problems.',
   locale: 'en',
-  /** TODO(publish): set the production domain (and mirror it in astro.config.mjs). */
-  url: '',
+  url: 'https://nicolas-bruna-portfolio.vercel.app',
   themeColor: '#0A0A0A',
   description:
     'Portfolio of Nicolás Bruna, software developer working across full stack, AI and Linux. Selected work, process and case studies.',
