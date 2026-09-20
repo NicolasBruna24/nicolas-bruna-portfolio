@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://nicolas-bruna-portfolio.vercel.app',
+  site: 'https://nicobrunaf.dev',
   devToolbar: {
     enabled: false,
   },
