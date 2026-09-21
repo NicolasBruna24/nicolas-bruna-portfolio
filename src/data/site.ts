@@ -35,6 +35,15 @@ export interface ProjectEntity {
   installUrl?: string;
 }
 
+export interface ArticleEntity {
+  /** Article headline, shared with the page metadata. */
+  title: string;
+  /** One-sentence description, shared with the page metadata. */
+  description: string;
+  /** ISO publication date (YYYY-MM-DD). */
+  pubDate: string;
+}
+
 export interface SiteConfig {
   name: string;
   role: string;
@@ -82,6 +91,7 @@ export const site: SiteConfig = {
  */
 export const navigation: NavItem[] = [
   { label: 'Projects', href: '/#work' },
+  { label: 'Engineering', href: '/engineering' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];

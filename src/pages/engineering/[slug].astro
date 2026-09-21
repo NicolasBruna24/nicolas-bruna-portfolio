@@ -1,0 +1,128 @@
+---
+import type { MarkdownInstance } from 'astro';
+import { engineeringArticles } from '../../data/engineering';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return engineeringArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+/**
+ * Markdown bodies live in `src/content/engineering/<slug>.md`; the typed
+ * metadata (title, description, dates, tags) lives in `src/data/engineering.ts`.
+ * Astro compiles `.md` imports natively — no content collections or MDX needed.
+ */
+const modules = import.meta.glob('/src/content/engineering/*.md', {
+  eager: true,
+}) as Record<string, MarkdownInstance<Record<string, string>>>;
+
+const { article } = Astro.props;
+const module = Object.entries(modules).find(
+  ([path]) => (path.split('/').pop() ?? '').replace(/\.md$/, '') === article.slug,
+);
+
+if (!module) {
+  throw new Error(
+    `Engineering article "/engineering/${article.slug}" has no Markdown body in src/content/engineering/.`,
+  );
+}
+
+const { Content } = module[1];
+
+const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  title={article.title}
+  description={article.description}
+  type="article"
+  article={{
+    title: article.title,
+    description: article.description,
+    pubDate: article.pubDate,
+  }}
+>
+  <article class="section" id="article" aria-labelledby="article-title">
+    <div class="container">
+      <header class="article-header" data-reveal>
+        <p class="eyebrow">Engineering</p>
+        <h1 class="article-header__title" id="article-title">{article.title}</h1>
+        <p class="article-header__meta">
+          <time datetime={article.pubDate}>{dateFormatter.format(new Date(article.pubDate))}</time>
+        </p>
+        <ul class="article-header__tags" aria-label="Topics">
+          {article.tags.map((tag) => (
+            <li class="chip">{tag}</li>
+          ))}
+        </ul>
+      </header>
+
+      <div class="eng-body" data-reveal>
+        <Content />
+      </div>
+
+      <nav class="article-nav" aria-label="Back to Engineering">
+        <a href="/engineering">&larr; Back to Engineering</a>
+        {article.relatedProject && (
+          <a href={article.relatedProject}>Project: {article.relatedProjectName}</a>
+        )}
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: start;
+  }
+
+  .article-header__title {
+    font-size: var(--text-2xl);
+  }
+
+  .article-header__meta {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .article-header__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .article-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    padding-block-start: var(--space-7);
+    font-size: var(--text-sm);
+  }
+
+  /* Minimal article typography, mirroring the tokens used elsewhere. */
+  .eng-body {
+    max-width: var(--measure);
+    padding-block-start: var(--space-6);
+  }
+
+  .eng-body :global(h2) {
+    font-size: var(--text-lg);
+    padding-block-start: var(--space-5);
+  }
+
+  .eng-body :global(p) {
+    color: var(--color-text-secondary);
+  }
+</style>

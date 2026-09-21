@@ -1,0 +1,92 @@
+---
+import { engineeringArticles } from '../../data/engineering';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const articles = [...engineeringArticles].sort((a, b) => b.pubDate.localeCompare(a.pubDate));
+
+const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout
+  title="Engineering"
+  description="Real engineering notes: experiments, technical problems, architecture decisions and lessons from building software with and without local AI."
+  type="website"
+>
+  <section class="section" id="engineering" aria-labelledby="engineering-title">
+    <div class="container">
+      <header class="section__header" data-reveal>
+        <p class="eyebrow" aria-hidden="true">Writing</p>
+        <h1 class="section__title" id="engineering-title">Engineering</h1>
+        <p class="section__lead">
+          Notes from real work: experiments, technical problems, architecture
+          decisions and what building software — including local AI setups —
+          actually teaches.
+        </p>
+      </header>
+
+      <ul class="eng-list">
+        {
+          articles.map((article) => (
+            <li class="eng-list__item" data-reveal>
+              <p class="eng-list__date" aria-hidden="true">
+                <time datetime={article.pubDate}>{dateFormatter.format(new Date(article.pubDate))}</time>
+              </p>
+              <h2 class="eng-list__title">
+                <a class="eng-list__link" href={`/engineering/${article.slug}`}>{article.title}</a>
+              </h2>
+              <p class="eng-list__summary">{article.description}</p>
+              <ul class="eng-list__tags" aria-label="Topics">
+                {article.tags.map((tag) => (
+                  <li class="chip">{tag}</li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .eng-list {
+    display: grid;
+    gap: var(--space-6);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .eng-list__date {
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .eng-list__title {
+    font-size: var(--text-lg);
+  }
+
+  .eng-list__link {
+    color: inherit;
+  }
+
+  .eng-list__summary {
+    max-width: 60ch;
+    color: var(--color-text-secondary);
+  }
+
+  .eng-list__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

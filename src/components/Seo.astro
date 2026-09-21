@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import type { ProjectEntity } from '../data/site';
+import type { ArticleEntity, ProjectEntity } from '../data/site';
 
 interface Props {
   /** Page title without the site name; the site name is appended automatically. */
@@ -9,9 +9,11 @@ interface Props {
   type?: 'website' | 'article';
   /** Structured-data entity, only for pages that describe a project. */
   project?: ProjectEntity;
+  /** Structured-data facts for an engineering article page. */
+  article?: ArticleEntity;
 }
 
-const { title, description = site.description, type = 'website', project } = Astro.props;
+const { title, description = site.description, type = 'website', project, article } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
 
@@ -60,6 +62,25 @@ const projectNodes =
       ]
     : [];
 
+/**
+ * Engineering article pages add a single `TechArticle` node. It reuses the
+ * canonical URL of the page as its `@id` and references the shared `Person`
+ * and `WebSite` nodes by `@id`, so the identity entities are never redefined.
+ */
+const articleNode =
+  article && canonicalUrl
+    ? {
+        '@type': 'TechArticle',
+        '@id': `${canonicalUrl}#article`,
+        headline: article.title,
+        description: article.description,
+        datePublished: article.pubDate,
+        url: canonicalUrl,
+        author: { '@id': personId },
+        isPartOf: { '@id': `${site.url}/#website` },
+      }
+    : null;
+
 const identityJson = site.url
   ? JSON.stringify({
       '@context': 'https://schema.org',
@@ -81,6 +102,7 @@ const identityJson = site.url
           creator: { '@id': personId },
         },
         ...projectNodes,
+        ...(articleNode ? [articleNode] : []),
       ],
     })
       // `<` is escaped so the JSON can never close the surrounding script tag.
