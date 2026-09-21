@@ -1,20 +1,91 @@
 ---
 import { site } from '../data/site';
+import type { ProjectEntity } from '../data/site';
 
 interface Props {
   /** Page title without the site name; the site name is appended automatically. */
   title?: string;
   description?: string;
   type?: 'website' | 'article';
+  /** Structured-data entity, only for pages that describe a project. */
+  project?: ProjectEntity;
 }
 
-const { title, description = site.description, type = 'website' } = Astro.props;
+const { title, description = site.description, type = 'website', project } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
 
 // Canonical and Open Graph URLs are only emitted once the production domain is
 // configured (see src/data/site.ts), so no URL is ever invented.
 const canonicalUrl = site.url ? new URL(Astro.url.pathname, site.url).href : '';
+
+/**
+ * Structured data for the person behind the site. Both entities use a stable
+ * `@id` built from the canonical origin, so later phases can reference the same
+ * nodes instead of redefining them. `Person.name` is the full name and
+ * `alternateName` is the professional name the site already displays everywhere.
+ */
+const personId = `${site.url}/#person`;
+
+/**
+ * Project pages add their own entity, plus a `SoftwareSourceCode` node when the
+ * project has a public repository: `codeRepository` is only valid on
+ * `SoftwareSourceCode`, so the repository is expressed as a linked node instead
+ * of an invented property on the application. Both nodes reuse the canonical URL
+ * of the page and reference the `Person` above by `@id`.
+ */
+const projectNodes =
+  project && canonicalUrl
+    ? [
+        {
+          '@type': project.type,
+          '@id': `${canonicalUrl}#project`,
+          name: project.name,
+          description: project.description,
+          url: canonicalUrl,
+          author: { '@id': personId },
+          ...(project.installUrl ? { installUrl: project.installUrl } : {}),
+        },
+        ...(project.codeRepository
+          ? [
+              {
+                '@type': 'SoftwareSourceCode',
+                '@id': `${canonicalUrl}#source`,
+                codeRepository: project.codeRepository,
+                author: { '@id': personId },
+                targetProduct: { '@id': `${canonicalUrl}#project` },
+              },
+            ]
+          : []),
+      ]
+    : [];
+
+const identityJson = site.url
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Person',
+          '@id': personId,
+          name: site.identity.fullName,
+          alternateName: site.name,
+          url: site.url,
+          jobTitle: site.role,
+          sameAs: [site.identity.github],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${site.url}/#website`,
+          name: site.name,
+          url: site.url,
+          creator: { '@id': personId },
+        },
+        ...projectNodes,
+      ],
+    })
+      // `<` is escaped so the JSON can never close the surrounding script tag.
+      .replace(/</g, '\\u003c')
+  : '';
 ---
 
 <title>{pageTitle}</title>
@@ -29,3 +100,4 @@ const canonicalUrl = site.url ? new URL(Astro.url.pathname, site.url).href : '';
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
+{identityJson && <script type="application/ld+json" is:inline set:html={identityJson} />}

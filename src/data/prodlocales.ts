@@ -26,6 +26,7 @@ import type {
   FlowStep,
   ProjectAction,
 } from './castlearq';
+import type { ProjectEntity } from './site';
 
 export interface Decision {
   /** The decision itself, stated as a heading. */
@@ -56,6 +57,7 @@ export interface ProdLocalesContent {
   tags: string[];
   seo: { title: string; description: string };
   actions: ProjectAction[];
+  entity: ProjectEntity;
   pendingNote: string;
   statusSection: {
     heading: string;
@@ -119,9 +121,17 @@ export interface ProdLocalesContent {
   };
 }
 
+/**
+ * Values shared by the page copy and its structured data, so the project name
+ * and the description are each written once.
+ */
+const projectName = 'ProdLocales';
+const seoDescription =
+  'ProdLocales was a product experiment exploring local product pricing and analytics, built as a web application on Supabase. Development is currently paused.';
+
 export const prodLocales: ProdLocalesContent = {
   route: '/projects/prodlocales',
-  name: 'ProdLocales',
+  name: projectName,
   summary: 'Local product pricing and analytics',
   status: 'Paused',
   eyebrow: 'Case study',
@@ -131,8 +141,7 @@ export const prodLocales: ProdLocalesContent = {
   tags: ['Product experiment', 'Web application', 'Supabase'],
   seo: {
     title: 'ProdLocales — Product Experiment (Paused)',
-    description:
-      'ProdLocales was a product experiment exploring local product pricing and analytics, built as a web application on Supabase. Development is currently paused.',
+    description: seoDescription,
   },
   // TODO: replace `null` with the repository and application URLs if the
   // project is ever published. Nothing is linked until then.
@@ -140,6 +149,12 @@ export const prodLocales: ProdLocalesContent = {
     { label: 'Source code', href: null },
     { label: 'Application', href: null },
   ],
+  // Nothing is public, so the entity declares no repository or distribution URL.
+  entity: {
+    type: 'SoftwareApplication',
+    name: projectName,
+    description: seoDescription,
+  },
   pendingNote: 'The repository and the hosted application are not public.',
 
   statusSection: {

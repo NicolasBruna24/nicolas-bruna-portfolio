@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://nicobrunaf.dev',
+  site: 'https://www.nicobrunaf.dev',
   devToolbar: {
     enabled: false,
   },

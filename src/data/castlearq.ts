@@ -12,6 +12,8 @@
  *  - no benchmarks, no performance numbers, no "automatically fixes your system"
  */
 
+import type { ProjectEntity } from './site';
+
 export interface ProjectAction {
   label: string;
   /** Public URL, or `null` while the link has not been published. */
@@ -74,6 +76,7 @@ export interface CastleArqContent {
   tags: string[];
   seo: { title: string; description: string };
   actions: ProjectAction[];
+  entity: ProjectEntity;
   problem: {
     heading: string;
     statement: string;
@@ -153,9 +156,18 @@ export interface CastleArqContent {
     backLabel: string;
   };
 }
+/**
+ * Values shared by the page copy and its structured data, so the project name,
+ * the description and the repository URL are each written once.
+ */
+const projectName = 'CastleArq';
+const seoDescription =
+  'CastleArq is an open-source platform exploring a simpler way to configure and run local AI based on hardware, software and model requirements.';
+const repositoryUrl = 'https://github.com/NicolasBruna24/castlearq';
+
 export const castleArq: CastleArqContent = {
   route: '/projects/castlearq',
-  name: 'CastleArq',
+  name: projectName,
   summary: 'Local AI orchestration platform',
   eyebrow: 'Case study',
   tagline: 'Making local AI easier to configure and run.',
@@ -164,14 +176,19 @@ export const castleArq: CastleArqContent = {
   tags: ['Open Source', 'Python', 'AI', 'Linux'],
   seo: {
     title: 'CastleArq — Local AI Orchestration Platform',
-    description:
-      'CastleArq is an open-source platform exploring a simpler way to configure and run local AI based on hardware, software and model requirements.',
+    description: seoDescription,
   },
   // Repository and documentation URLs are public.
   actions: [
-    { label: 'View on GitHub', href: 'https://github.com/NicolasBruna24/castlearq' },
-    { label: 'Documentation', href: 'https://github.com/NicolasBruna24/castlearq/blob/main/README.md' },
+    { label: 'View on GitHub', href: repositoryUrl },
+    { label: 'Documentation', href: `${repositoryUrl}/blob/main/README.md` },
   ],
+  entity: {
+    type: 'SoftwareApplication',
+    name: projectName,
+    description: seoDescription,
+    codeRepository: repositoryUrl,
+  },
 
   problem: {
     heading: 'The problem',

@@ -24,6 +24,7 @@ import type {
   ProjectAction,
   SplitPair,
 } from './castlearq';
+import type { ProjectEntity } from './site';
 
 export interface Decision {
   /** The decision itself, stated as a heading. */
@@ -46,6 +47,7 @@ export interface SnapContextContent {
   tags: string[];
   seo: { title: string; description: string };
   actions: ProjectAction[];
+  entity: ProjectEntity;
   problem: {
     heading: string;
     statement: string;
@@ -113,9 +115,19 @@ export interface SnapContextContent {
   };
 }
 
+/**
+ * Values shared by the page copy and its structured data, so the project name,
+ * the description and the public URLs are each written once.
+ */
+const projectName = 'SnapContext';
+const seoDescription =
+  'SnapContext is an open-source AI coding assistant that detects the project, selects relevant files and prepares context for AI-assisted development workflows.';
+const repositoryUrl = 'https://github.com/NicolasBruna24/snapcontext';
+const packageUrl = 'https://pypi.org/project/snapcontext/';
+
 export const snapContext: SnapContextContent = {
   route: '/projects/snapcontext',
-  name: 'SnapContext',
+  name: projectName,
   summary: 'AI context management for developers',
   eyebrow: 'Case study',
   tagline: 'Relevant project context, prepared automatically.',
@@ -124,13 +136,19 @@ export const snapContext: SnapContextContent = {
   tags: ['Open Source', 'Python', 'AI', 'CLI + IDEs'],
   seo: {
     title: 'SnapContext — AI Context Management for Developers',
-    description:
-      'SnapContext is an open-source AI coding assistant that detects the project, selects relevant files and prepares context for AI-assisted development workflows.',
+    description: seoDescription,
   },
   actions: [
-    { label: 'View on GitHub', href: 'https://github.com/NicolasBruna24/snapcontext' },
-    { label: 'Install from PyPI', href: 'https://pypi.org/project/snapcontext/' },
+    { label: 'View on GitHub', href: repositoryUrl },
+    { label: 'Install from PyPI', href: packageUrl },
   ],
+  entity: {
+    type: 'SoftwareApplication',
+    name: projectName,
+    description: seoDescription,
+    codeRepository: repositoryUrl,
+    installUrl: packageUrl,
+  },
 
   problem: {
     heading: 'The problem',
@@ -321,8 +339,8 @@ export const snapContext: SnapContextContent = {
       'Telegram',
     ],
     actions: [
-      { label: 'GitHub', href: 'https://github.com/NicolasBruna24/snapcontext' },
-      { label: 'PyPI', href: 'https://pypi.org/project/snapcontext/' },
+      { label: 'GitHub', href: repositoryUrl },
+      { label: 'PyPI', href: packageUrl },
       // TODO: link the marketplace listings once they are public. The
       // extensions exist in the repository (vscode/, jetbrains/) but no
       // published listing URL could be verified, so none is invented.

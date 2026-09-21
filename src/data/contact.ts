@@ -7,6 +7,8 @@
  * No LinkedIn, phone, Discord, X or other social profiles are invented.
  */
 
+import { site } from './site';
+
 export interface ContactCategory {
   title: string;
   body: string;
@@ -62,7 +64,7 @@ export const contact: ContactContent = {
   github: {
     label: 'GitHub',
     handle: 'NicolasBruna24',
-    href: 'https://github.com/NicolasBruna24',
+    href: site.identity.github,
   },
   categories: {
     heading: 'What to contact me about',

@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import Navbar from '../components/Navbar.astro';
 import Seo from '../components/Seo.astro';
 import { site } from '../data/site';
+import type { ProjectEntity } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -14,9 +15,11 @@ interface Props {
   description?: string;
   /** Open Graph type passed through to the SEO component. */
   type?: 'website' | 'article';
+  /** Structured-data entity, only for pages that describe a project. */
+  project?: ProjectEntity;
 }
 
-const { title, description, type } = Astro.props;
+const { title, description, type, project } = Astro.props;
 ---
 
 <!doctype html>
@@ -26,7 +29,7 @@ const { title, description, type } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <Seo title={title} description={description} type={type} />
+    <Seo title={title} description={description} type={type} project={project} />
     <ClientRouter />
     <script is:inline>
       // Progressive enhancement flag: reveal animations only hide content when

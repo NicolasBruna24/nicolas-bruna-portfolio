@@ -30,7 +30,12 @@ const statusLabels: Record<CapabilityStatus, string> = {
 };
 ---
 
-<BaseLayout title={castleArq.seo.title} description={castleArq.seo.description} type="article">
+<BaseLayout
+  title={castleArq.seo.title}
+  description={castleArq.seo.description}
+  type="article"
+  project={castleArq.entity}
+>
   <CaseStudyHero
     name={castleArq.name}
     eyebrow={castleArq.eyebrow}

@@ -10,6 +10,7 @@
 import { castleArq } from './castlearq';
 import type { ProjectAction } from './castlearq';
 import { prodLocales } from './prodlocales';
+import { site } from './site';
 import { snapContext } from './snapcontext';
 
 export interface AboutProjectLink {
@@ -70,7 +71,7 @@ export const about: AboutContent = {
   about: {
     heading: 'About',
     body: [
-      'I am Nicolás Bruna, a software developer from Chile. I studied Ingeniería Informática at INACAP Valparaíso and obtained the Analista Programador qualification.',
+      'I am Nicolás Isaías Bruna Fuentealba, known professionally as Nicolás Bruna, a software developer from Chile. I studied Ingeniería Informática at INACAP Valparaíso and obtained the Analista Programador qualification.',
       'Most of what I know about software, AI and systems comes from building things: local AI tooling, developer tools, product experiments and full-stack applications. I learn by turning a problem into something executable, investigating why it behaves the way it does, and iterating until the system underneath makes sense.',
       'This portfolio is a record of that process — the problems I chose to investigate, the software that came out of them, and what each project taught me.',
     ],
@@ -213,7 +214,7 @@ export const about: AboutContent = {
     body: 'This portfolio is a record of the problems I have chosen to investigate, the software I have built, and the systems I am still learning to understand.',
     links: [
       { label: 'Selected work', href: '/#work' },
-      { label: 'GitHub', href: 'https://github.com/NicolasBruna24' },
+      { label: 'GitHub', href: site.identity.github },
       // /contact now exists, so the About closing links straight to it —
       // no pending pill, no invented email or social URL here.
       { label: 'Contact', href: '/contact' },

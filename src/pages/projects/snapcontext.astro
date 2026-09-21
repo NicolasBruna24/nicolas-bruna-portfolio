@@ -29,7 +29,12 @@ const statusLabels: Record<CapabilityStatus, string> = {
 };
 ---
 
-<BaseLayout title={snapContext.seo.title} description={snapContext.seo.description} type="article">
+<BaseLayout
+  title={snapContext.seo.title}
+  description={snapContext.seo.description}
+  type="article"
+  project={snapContext.entity}
+>
   <CaseStudyHero
     name={snapContext.name}
     eyebrow={snapContext.eyebrow}
