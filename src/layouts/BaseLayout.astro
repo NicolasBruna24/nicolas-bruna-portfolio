@@ -19,9 +19,11 @@ interface Props {
   project?: ProjectEntity;
   /** Structured-data facts for an engineering article page. */
   article?: ArticleEntity;
+  /** Marks the page as a schema.org ProfilePage, only for /about. */
+  profilePage?: boolean;
 }
 
-const { title, description, type, project, article } = Astro.props;
+const { title, description, type, project, article, profilePage } = Astro.props;
 ---
 
 <!doctype html>
@@ -37,6 +39,7 @@ const { title, description, type, project, article } = Astro.props;
       type={type}
       project={project}
       article={article}
+      profilePage={profilePage}
     />
     <ClientRouter />
     <script is:inline>

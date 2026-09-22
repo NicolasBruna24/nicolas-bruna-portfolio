@@ -11,9 +11,11 @@ interface Props {
   project?: ProjectEntity;
   /** Structured-data facts for an engineering article page. */
   article?: ArticleEntity;
+  /** Marks the page as a schema.org ProfilePage whose mainEntity is the Person. */
+  profilePage?: boolean;
 }
 
-const { title, description = site.description, type = 'website', project, article } = Astro.props;
+const { title, description = site.description, type = 'website', project, article, profilePage } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
 
@@ -81,6 +83,21 @@ const articleNode =
       }
     : null;
 
+/**
+ * The About page adds a `ProfilePage` node. It does not redefine the person:
+ * `mainEntity` references the shared `Person` by `@id`, so there is still
+ * exactly one `Person` node for the whole site.
+ */
+const profilePageNode =
+  profilePage && canonicalUrl
+    ? {
+        '@type': 'ProfilePage',
+        '@id': `${canonicalUrl.replace(/[/]$/, '')}/#profile`,
+        url: canonicalUrl,
+        mainEntity: { '@id': personId },
+      }
+    : null;
+
 const identityJson = site.url
   ? JSON.stringify({
       '@context': 'https://schema.org',
@@ -101,6 +118,7 @@ const identityJson = site.url
           url: site.url,
           creator: { '@id': personId },
         },
+        ...(profilePageNode ? [profilePageNode] : []),
         ...projectNodes,
         ...(articleNode ? [articleNode] : []),
       ],

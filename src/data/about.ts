@@ -215,6 +215,9 @@ export const about: AboutContent = {
     links: [
       { label: 'Selected work', href: '/#work' },
       { label: 'GitHub', href: site.identity.github },
+      // The verified LinkedIn profile lives in site.identity; reusing it here
+      // keeps a single source of truth for the URL.
+      { label: 'LinkedIn', href: site.identity.linkedin },
       // /contact now exists, so the About closing links straight to it —
       // no pending pill, no invented email or social URL here.
       { label: 'Contact', href: '/contact' },
