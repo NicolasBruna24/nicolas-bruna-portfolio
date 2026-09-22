@@ -29,11 +29,13 @@ export interface EngineeringArticle {
 
 export const engineeringArticles: EngineeringArticle[] = [
   {
-    slug: 'test',
-    title: 'Engineering log — pipeline test',
+    slug: 'de-ejecutar-ia-local-a-construir-castlearq',
+    title: 'De ejecutar IA local a construir CastleArq',
     description:
-      'A minimal placeholder article that proves the /engineering content pipeline end to end.',
+      'Cómo un problema práctico con la IA local terminó convirtiéndose en la construcción de una arquitectura para hacerla más accesible.',
     pubDate: '2026-09-21',
-    tags: ['Pipeline test'],
+    tags: ['Local AI', 'CastleArq', 'Software Architecture', 'Open Source'],
+    relatedProject: '/projects/castlearq',
+    relatedProjectName: 'CastleArq',
   },
 ];
