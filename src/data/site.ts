@@ -15,6 +15,8 @@ export interface SiteIdentity {
   fullName: string;
   /** GitHub profile that belongs to this person. */
   github: string;
+  /** LinkedIn profile that belongs to this person. */
+  linkedin: string;
 }
 
 /**
@@ -81,6 +83,7 @@ export const site: SiteConfig = {
   identity: {
     fullName: 'Nicolás Isaías Bruna Fuentealba',
     github: 'https://github.com/NicolasBruna24',
+    linkedin: 'https://www.linkedin.com/in/nicol%C3%A1s-bruna-fuentealba-6086b8410/',
   },
 };
 
