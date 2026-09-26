@@ -23,13 +23,18 @@ const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site
 // configured (see src/data/site.ts), so no URL is ever invented.
 const canonicalUrl = site.url ? new URL(Astro.url.pathname, site.url).href : '';
 
+// Canonical origin written with the trailing slash the site's own URLs use, so
+// every `url` in the structured data matches the canonical URL exactly.
+const siteUrl = `${site.url.replace(/\/+$/, '')}/`;
+
 /**
  * Structured data for the person behind the site. Both entities use a stable
  * `@id` built from the canonical origin, so later phases can reference the same
- * nodes instead of redefining them. `Person.name` is the full name and
- * `alternateName` is the professional name the site already displays everywhere.
+ * nodes instead of redefining them. `Person.name` is the full name,
+ * `alternateName` lists the verified spellings the site and the public profiles
+ * use, and `knowsAbout` repeats only the topics /about already publishes.
  */
-const personId = `${site.url}/#person`;
+const personId = `${siteUrl}#person`;
 
 /**
  * Project pages add their own entity, plus a `SoftwareSourceCode` node when the
@@ -55,6 +60,9 @@ const projectNodes =
               {
                 '@type': 'SoftwareSourceCode',
                 '@id': `${canonicalUrl}#source`,
+                // Repository name taken from the repository URL itself, so the
+                // node has a `name` without inventing one.
+                name: project.codeRepository.replace(/\/+$/, '').split('/').pop() ?? project.name,
                 codeRepository: project.codeRepository,
                 author: { '@id': personId },
                 targetProduct: { '@id': `${canonicalUrl}#project` },
@@ -78,8 +86,9 @@ const articleNode =
         description: article.description,
         datePublished: article.pubDate,
         url: canonicalUrl,
+        inLanguage: article.lang,
         author: { '@id': personId },
-        isPartOf: { '@id': `${site.url}/#website` },
+        isPartOf: { '@id': `${siteUrl}#website` },
       }
     : null;
 
@@ -106,16 +115,22 @@ const identityJson = site.url
           '@type': 'Person',
           '@id': personId,
           name: site.identity.fullName,
-          alternateName: site.name,
-          url: site.url,
+          // Verified spellings only: the professional name the site displays
+          // plus the ones the public profiles themselves use.
+          alternateName: [site.name, ...site.identity.alternateNames],
+          url: siteUrl,
           jobTitle: site.role,
+          description: site.description,
           sameAs: [site.identity.github, site.identity.linkedin],
+          knowsAbout: site.identity.knowsAbout,
         },
         {
           '@type': 'WebSite',
-          '@id': `${site.url}/#website`,
+          '@id': `${siteUrl}#website`,
           name: site.name,
-          url: site.url,
+          url: siteUrl,
+          description: site.description,
+          inLanguage: site.locale,
           creator: { '@id': personId },
         },
         ...(profilePageNode ? [profilePageNode] : []),

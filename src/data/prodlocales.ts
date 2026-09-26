@@ -7,8 +7,9 @@
  * the project is never described twice.
  *
  * IMPORTANT — what this page can and cannot claim.
- * There is no public repository for ProdLocales and no local source tree to
- * inspect. Everything stated here comes from what is documented about the
+ * The project has an official public repository
+ * (github.com/NicolasBruna24/marketplace-productos-locales), which this page
+ * links. Everything else stated here comes from what is documented about the
  * project: it was built as a product experiment about local product pricing
  * and analytics, as a web application with its data hosted on Supabase, and
  * development is currently paused. The hosted Supabase database pauses
@@ -17,8 +18,8 @@
  *  - a stack beyond "web application + hosted Supabase database"
  *  - users, production usage, revenue, downloads or any metric
  *  - a reason for the pause (none is documented)
- *  - any public URL (the repository and the hosted app are not public, so
- *    every action uses the pending-link convention)
+ *  - any URL other than the official repository: the hosted application is not
+ *    linked here, so its action keeps the pending-link convention
  */
 
 import type {
@@ -128,6 +129,12 @@ export interface ProdLocalesContent {
 const projectName = 'ProdLocales';
 const seoDescription =
   'ProdLocales was a product experiment exploring local product pricing and analytics, built as a web application on Supabase. Development is currently paused.';
+/**
+ * Official repository of the project, published under the same account the
+ * rest of the portfolio work belongs to. The project is paused, so the
+ * repository is the only public resource linked from this page.
+ */
+const repositoryUrl = 'https://github.com/NicolasBruna24/marketplace-productos-locales';
 
 export const prodLocales: ProdLocalesContent = {
   route: '/projects/prodlocales',
@@ -143,19 +150,21 @@ export const prodLocales: ProdLocalesContent = {
     title: 'ProdLocales — Product Experiment (Paused)',
     description: seoDescription,
   },
-  // TODO: replace `null` with the repository and application URLs if the
-  // project is ever published. Nothing is linked until then.
+  // The official repository is public and linked here; the hosted application
+  // is not linked, so its action keeps the pending-link convention.
   actions: [
-    { label: 'Source code', href: null },
+    { label: 'Source code', href: repositoryUrl },
     { label: 'Application', href: null },
   ],
-  // Nothing is public, so the entity declares no repository or distribution URL.
+  // The repository URL is public; no application or distribution URL is linked,
+  // so the entity declares only what exists.
   entity: {
     type: 'SoftwareApplication',
     name: projectName,
     description: seoDescription,
+    codeRepository: repositoryUrl,
   },
-  pendingNote: 'The repository and the hosted application are not public.',
+  pendingNote: 'The hosted application is not linked from this page.',
 
   statusSection: {
     heading: 'Status',
@@ -188,7 +197,7 @@ export const prodLocales: ProdLocalesContent = {
       { title: 'Insights' },
       { title: 'Decision' },
     ],
-    note: 'This page documents the project at the level of its design. The source has not been published, so finer implementation detail is deliberately not described.',
+    note: 'This page documents the project at the level of its design, so finer implementation detail is deliberately not described.',
   },
 
   howItWorks: {
@@ -220,7 +229,7 @@ export const prodLocales: ProdLocalesContent = {
           'The user saw pricing information presented as analysis rather than as a raw list.',
       },
     ],
-    note: 'The stages describe the product at the level of its design. Because the source is unpublished, this page does not go deeper than what is documented.',
+    note: 'The stages describe the product at the level of its design; this page does not go deeper than what is documented.',
   },
 
   architecture: {
@@ -278,12 +287,12 @@ export const prodLocales: ProdLocalesContent = {
       { title: 'Decision', description: 'What the user was meant to take away.' },
     ],
     chainCaption: 'The application sat between raw entries and the analysis the user saw.',
-    note: 'The product\u2019s value was intended to be this transformation. The page documents it at design level because the source has not been published.',
+    note: 'The product\u2019s value was intended to be this transformation. This page documents it at design level and makes no implementation claims.',
   },
 
   currentState: {
     heading: 'Current state',
-    lead: 'What exists, what is paused, and what is simply not public.',
+    lead: 'What exists, what is paused, and what is publicly available.',
     groups: [
       {
         label: 'Built',
@@ -324,17 +333,16 @@ export const prodLocales: ProdLocalesContent = {
         ],
       },
       {
-        label: 'Not published',
+        label: 'Availability',
         items: [
           {
             name: 'Repository and source',
             description:
-              'The source has not been published, so this page describes the project at design level and makes no deeper implementation claims.',
+              'The source is published in the official repository linked from this page.',
           },
           {
             name: 'Hosted application',
-            description:
-              'The application is not publicly reachable, so there is no live link to it here.',
+            description: 'The application is not linked from this page.',
           },
           {
             name: 'Roadmap',
@@ -344,7 +352,7 @@ export const prodLocales: ProdLocalesContent = {
         ],
       },
     ],
-    note: 'ProdLocales was built as a working experiment. Paused is not failed, and unpublished is not vanished: the project and its code remain, simply not public.',
+    note: 'ProdLocales was built as a working experiment. Paused is not failed, and paused is not vanished: the project and its code remain, with the source public in the official repository.',
   },
 
   learned: {

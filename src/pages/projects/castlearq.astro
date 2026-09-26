@@ -3,6 +3,7 @@ import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.as
 import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
 import FlowChain from '../../components/project/FlowChain.astro';
 import ProjectActions from '../../components/project/ProjectActions.astro';
+import RelatedWork from '../../components/project/RelatedWork.astro';
 import { castleArq } from '../../data/castlearq';
 import type { CapabilityStatus } from '../../data/castlearq';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -33,7 +34,7 @@ const statusLabels: Record<CapabilityStatus, string> = {
 <BaseLayout
   title={castleArq.seo.title}
   description={castleArq.seo.description}
-  type="article"
+  type="website"
   project={castleArq.entity}
 >
   <CaseStudyHero
@@ -352,11 +353,10 @@ const statusLabels: Record<CapabilityStatus, string> = {
       <p class="closing__body" data-reveal>{closing.body}</p>
 
       <div class="closing__actions" data-reveal>
-        <ProjectActions
-          actions={castleArq.actions}
-          pendingNote="The repository and the documentation will be linked here once they are public."
-        />
+        <ProjectActions actions={castleArq.actions} />
       </div>
+
+      <RelatedWork currentRoute={castleArq.route} />
 
       <a class="closing__back" href={closing.backHref} data-reveal>
         <span aria-hidden="true">←</span>

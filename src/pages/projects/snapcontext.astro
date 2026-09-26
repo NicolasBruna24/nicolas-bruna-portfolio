@@ -3,6 +3,7 @@ import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.as
 import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
 import FlowChain from '../../components/project/FlowChain.astro';
 import ProjectActions from '../../components/project/ProjectActions.astro';
+import RelatedWork from '../../components/project/RelatedWork.astro';
 import { snapContext } from '../../data/snapcontext';
 import type { CapabilityStatus } from '../../data/castlearq';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -32,7 +33,7 @@ const statusLabels: Record<CapabilityStatus, string> = {
 <BaseLayout
   title={snapContext.seo.title}
   description={snapContext.seo.description}
-  type="article"
+  type="website"
   project={snapContext.entity}
 >
   <CaseStudyHero
@@ -264,6 +265,8 @@ const statusLabels: Record<CapabilityStatus, string> = {
           pendingNote="Project links are shown above; the marketplace listings will be added here once they are public."
         />
       </div>
+
+      <RelatedWork currentRoute={snapContext.route} />
 
       <a class="closing__back" href={closing.backHref} data-reveal>
         <span aria-hidden="true">←</span>

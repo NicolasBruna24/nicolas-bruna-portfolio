@@ -6,17 +6,49 @@
  */
 
 /**
- * Identity used for structured data. It holds the full name and the verified
- * public profiles, so `name`, the canonical URL and GitHub are each defined in
- * exactly one place for the whole site.
+ * A public profile that belongs to the person behind the site.
+ *
+ * `rel: 'me'` is the standard HTML signal that the linked profile and the
+ * linking page represent the same person; it is only used for profiles that
+ * have been verified against each other.
+ */
+export interface IdentityProfile {
+  /** Visible link label. */
+  label: string;
+  /** Verified profile URL. */
+  href: string;
+  /** Marks the profile as belonging to the same person (`rel="me"`). */
+  rel: 'me';
+}
+
+/**
+ * Identity used for structured data and for every link that connects this site
+ * to the person's public profiles, so `name`, the canonical URL, GitHub and
+ * LinkedIn are each defined in exactly one place for the whole site.
  */
 export interface SiteIdentity {
-  /** Full name. Structured data uses it; the site itself displays `name`. */
+  /** Full name. Structured data uses it; the site itself displays `displayName`. */
   fullName: string;
+  /** Professional name shown across the site. */
+  displayName: string;
+  /**
+   * Other verified spellings of the same person: the professional name used by
+   * the site's own copy and the names shown on the public profiles below. No
+   * spelling is added that is not already published somewhere.
+   */
+  alternateNames: string[];
   /** GitHub profile that belongs to this person. */
   github: string;
   /** LinkedIn profile that belongs to this person. */
   linkedin: string;
+  /**
+   * Topics this site itself claims for the person, copied from the areas,
+   * focus and technologies published on /about. Never extended with anything
+   * the site does not already state.
+   */
+  knowsAbout: string[];
+  /** Verified external profiles, in the order they should be displayed. */
+  profiles: IdentityProfile[];
 }
 
 /**
@@ -44,6 +76,8 @@ export interface ArticleEntity {
   description: string;
   /** ISO publication date (YYYY-MM-DD). */
   pubDate: string;
+  /** BCP-47 language of the article body, e.g. "es". */
+  lang: string;
 }
 
 export interface SiteConfig {
@@ -70,8 +104,49 @@ export interface NavItem {
   href?: string;
 }
 
+/**
+ * Professional name. Written once and reused as the site's display name and as
+ * the first `alternateName` of the Person node.
+ */
+const displayName = 'Nicolás Bruna';
+
+/**
+ * Verified public profiles. The URLs are written once here and reused by
+ * `identity.github` / `identity.linkedin` and by the footer and contact links,
+ * so a profile URL never drifts between two copies.
+ */
+const githubProfile = 'https://github.com/NicolasBruna24';
+const linkedinProfile = 'https://www.linkedin.com/in/nicol%C3%A1s-bruna-fuentealba-6086b8410/';
+
+/**
+ * Identity source of truth. Only facts that are already published by the site
+ * or by the verified profiles themselves appear here.
+ */
+const identity: SiteIdentity = {
+  fullName: 'Nicolás Isaías Bruna Fuentealba',
+  displayName,
+  // Verified spellings: the professional name used across the site, the name
+  // shown by the GitHub profile README and its display name, and the handle.
+  alternateNames: ['Nicolás Bruna Fuentealba', 'Nicolas Bruna Fuentealba', 'NicolasBruna24'],
+  github: githubProfile,
+  linkedin: linkedinProfile,
+  knowsAbout: [
+    'Software development',
+    'Full-stack and backend development',
+    'Local AI',
+    'AI-assisted development',
+    'Linux',
+    'Software architecture',
+    'Systems and infrastructure',
+  ],
+  profiles: [
+    { label: 'GitHub', href: githubProfile, rel: 'me' },
+    { label: 'LinkedIn', href: linkedinProfile, rel: 'me' },
+  ],
+};
+
 export const site: SiteConfig = {
-  name: 'Nicolás Bruna',
+  name: displayName,
   role: 'Software Developer',
   focus: 'Full Stack · AI · Linux',
   tagline: 'I build software that solves real problems.',
@@ -80,11 +155,7 @@ export const site: SiteConfig = {
   themeColor: '#0A0A0A',
   description:
     'Portfolio of Nicolás Bruna, software developer working across full stack, AI and Linux. Selected work, process and case studies.',
-  identity: {
-    fullName: 'Nicolás Isaías Bruna Fuentealba',
-    github: 'https://github.com/NicolasBruna24',
-    linkedin: 'https://www.linkedin.com/in/nicol%C3%A1s-bruna-fuentealba-6086b8410/',
-  },
+  identity,
 };
 
 /**

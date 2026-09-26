@@ -57,8 +57,10 @@ export const about: AboutContent = {
   route: '/about',
   hero: {
     heading: 'I build software to understand problems.',
-    name: 'Nicolás Bruna',
-    role: 'Software Developer',
+    // Name and headline come from the shared identity source (`site.ts`), so
+    // the page and the structured data can never disagree.
+    name: site.identity.displayName,
+    role: site.role,
     intro:
       'I build software around real problems I run into, experiment with technologies along the way, and keep coming back to the same intersection: software, AI and systems.',
     meta: ['Valparaíso, Chile', 'EN / ES'],
@@ -214,10 +216,10 @@ export const about: AboutContent = {
     body: 'This portfolio is a record of the problems I have chosen to investigate, the software I have built, and the systems I am still learning to understand.',
     links: [
       { label: 'Selected work', href: '/#work' },
-      { label: 'GitHub', href: site.identity.github },
-      // The verified LinkedIn profile lives in site.identity; reusing it here
-      // keeps a single source of truth for the URL.
-      { label: 'LinkedIn', href: site.identity.linkedin },
+      // `rel: 'me'` marks the profiles that verifiably belong to the same
+      // person; the URLs come from the shared identity source.
+      { label: 'GitHub', href: site.identity.github, rel: 'me' },
+      { label: 'LinkedIn', href: site.identity.linkedin, rel: 'me' },
       // /contact now exists, so the About closing links straight to it —
       // no pending pill, no invented email or social URL here.
       { label: 'Contact', href: '/contact' },

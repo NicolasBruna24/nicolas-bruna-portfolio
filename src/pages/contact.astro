@@ -3,7 +3,7 @@ import ScrollCue from '../components/ScrollCue.astro';
 import { contact } from '../data/contact';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const { hero, seo, email, github, categories, closing } = contact;
+const { hero, seo, email, github, linkedin, categories, closing } = contact;
 ---
 
 <BaseLayout title={seo.title} description={seo.description} type="website">
@@ -38,8 +38,15 @@ const { hero, seo, email, github, categories, closing } = contact;
         <div class="rows__item">
           <dt class="rows__term">{github.label}</dt>
           <dd class="rows__detail">
-            <a class="text-link" href={github.href}>{github.handle}</a>
+            <a class="text-link" href={github.href} rel="me">{github.handle}</a>
             <span class="rows__note">Explore the code before writing.</span>
+          </dd>
+        </div>
+
+        <div class="rows__item">
+          <dt class="rows__term">{linkedin.label}</dt>
+          <dd class="rows__detail">
+            <a class="text-link" href={linkedin.href} rel="me">{linkedin.handle}</a>
           </dd>
         </div>
       </dl>

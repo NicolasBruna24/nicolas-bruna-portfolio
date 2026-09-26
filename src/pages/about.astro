@@ -225,7 +225,7 @@ const { hero, seo } = about;
 
       <div class="closing__actions" data-reveal>
         {about.closing.links.map((link, index) => (
-          <a class={index === 0 ? 'btn btn--primary' : 'btn btn--ghost'} href={link.href}>
+          <a class={index === 0 ? 'btn btn--primary' : 'btn btn--ghost'} href={link.href} rel={link.rel}>
             {link.label}
           </a>
         ))}

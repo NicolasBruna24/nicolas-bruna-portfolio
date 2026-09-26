@@ -3,6 +3,7 @@ import ArchitectureDiagram from '../../components/project/ArchitectureDiagram.as
 import CaseStudyHero from '../../components/project/CaseStudyHero.astro';
 import FlowChain from '../../components/project/FlowChain.astro';
 import ProjectActions from '../../components/project/ProjectActions.astro';
+import RelatedWork from '../../components/project/RelatedWork.astro';
 import { prodLocales } from '../../data/prodlocales';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -26,7 +27,7 @@ const pad = (index: number): string => String(index + 1).padStart(2, '0');
 <BaseLayout
   title={prodLocales.seo.title}
   description={prodLocales.seo.description}
-  type="article"
+  type="website"
   project={prodLocales.entity}
 >
   <CaseStudyHero
@@ -38,6 +39,7 @@ const pad = (index: number): string => String(index + 1).padStart(2, '0');
     intro={prodLocales.intro}
     tags={prodLocales.tags}
     actions={prodLocales.actions}
+    pendingNote={prodLocales.pendingNote}
     scrollTargetId="status"
     backHref={closing.backHref}
     backLabel="Selected work"
@@ -238,6 +240,8 @@ const pad = (index: number): string => String(index + 1).padStart(2, '0');
           pendingNote={prodLocales.pendingNote}
         />
       </div>
+
+      <RelatedWork currentRoute={prodLocales.route} />
 
       <a class="closing__back" href={closing.backHref} data-reveal>
         <span aria-hidden="true">←</span>

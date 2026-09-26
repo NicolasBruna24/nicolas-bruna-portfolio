@@ -2,14 +2,40 @@
 import NavLinks from './NavLinks.astro';
 import { navigation, site } from '../data/site';
 
+interface Props {
+  /** Language of the chrome when it differs from the page content. */
+  lang?: string;
+}
+
+const { lang } = Astro.props;
+
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer">
+<footer class="footer" lang={lang}>
   <div class="container footer__inner">
     <div class="footer__identity">
       <p class="footer__name">{site.name}</p>
       <p class="footer__meta">{site.role} · {site.focus}</p>
+
+      {/* Identity links: the same verified profiles used in the structured
+          data, so every page connects the author to their public profiles. */}
+      <ul class="footer__profiles">
+        {
+          site.identity.profiles.map((profile) => (
+            <li class="footer__profile">
+              <a
+                class="footer__profile-link"
+                href={profile.href}
+                rel={profile.rel}
+                aria-label={`${site.identity.displayName} on ${profile.label}`}
+              >
+                {profile.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
     <NavLinks items={navigation} ariaLabel="Footer" />
@@ -40,6 +66,26 @@ const year = new Date().getFullYear();
     margin-block-start: var(--space-1);
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
+  }
+
+  /* Identity links: a compact row, not a social section. */
+  .footer__profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-block-start: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .footer__profile-link {
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .footer__profile-link:hover {
+    color: var(--color-text);
   }
 
   .footer__legal {

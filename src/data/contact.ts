@@ -3,8 +3,9 @@
  *
  * Only confirmed contact methods appear here:
  *  - email (explicitly authorized for the portfolio, used as a plain mailto:)
- *  - GitHub profile (already verified and used across the portfolio)
- * No LinkedIn, phone, Discord, X or other social profiles are invented.
+ *  - GitHub and LinkedIn profiles (the verified URLs from `site.identity`,
+ *    also used in the footer and in the site's structured data)
+ * No phone, Discord, X or other social profiles are invented.
  */
 
 import { site } from './site';
@@ -29,6 +30,13 @@ export interface ContactContent {
   };
   github: {
     label: string;
+    handle: string;
+    href: string;
+  };
+  /** LinkedIn profile, using the shared verified identity URL. */
+  linkedin: {
+    label: string;
+    /** Link text: the professional name, not the profile URL slug. */
     handle: string;
     href: string;
   };
@@ -65,6 +73,11 @@ export const contact: ContactContent = {
     label: 'GitHub',
     handle: 'NicolasBruna24',
     href: site.identity.github,
+  },
+  linkedin: {
+    label: 'LinkedIn',
+    handle: site.identity.displayName,
+    href: site.identity.linkedin,
   },
   categories: {
     heading: 'What to contact me about',

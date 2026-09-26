@@ -7,7 +7,7 @@ interface Props {
   pendingNote?: string;
 }
 
-const { actions, pendingNote = 'Repository and documentation links are not public yet.' } =
+const { actions, pendingNote = 'Some links are not public yet.' } =
   Astro.props;
 
 const hasPending = actions.some((action) => action.href === null);

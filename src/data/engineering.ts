@@ -17,6 +17,11 @@ export interface EngineeringArticle {
   description: string;
   /** ISO publication date (YYYY-MM-DD). */
   pubDate: string;
+  /**
+   * BCP-47 language the article body is written in. The site itself is in
+   * English, so this is what marks the article page as the language it uses.
+   */
+  lang: string;
   /** Topic chips shown on the article page. */
   tags: string[];
   /**
@@ -34,6 +39,8 @@ export const engineeringArticles: EngineeringArticle[] = [
     description:
       'Cómo un problema práctico con la IA local terminó convirtiéndose en la construcción de una arquitectura para hacerla más accesible.',
     pubDate: '2026-09-21',
+    // The Markdown body is written in Spanish; the site chrome stays English.
+    lang: 'es',
     tags: ['Local AI', 'CastleArq', 'Software Architecture', 'Open Source'],
     relatedProject: '/projects/castlearq',
     relatedProjectName: 'CastleArq',

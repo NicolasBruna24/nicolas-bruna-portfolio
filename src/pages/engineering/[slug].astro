@@ -1,6 +1,8 @@
 ---
 import type { MarkdownInstance } from 'astro';
+import { about } from '../../data/about';
 import { engineeringArticles } from '../../data/engineering';
+import { site } from '../../data/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
@@ -32,10 +34,17 @@ if (!module) {
 
 const { Content } = module[1];
 
+/**
+ * `pubDate` is a content date (`YYYY-MM-DD`) with no time and no timezone, and
+ * `new Date('2026-09-21')` parses it as UTC midnight. Formatting in UTC keeps
+ * the rendered date equal to the declared one no matter which timezone the
+ * build runs in (locally in UTC-3/-4 it used to slip to the previous day).
+ */
 const dateFormatter = new Intl.DateTimeFormat('en-CA', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
+  timeZone: 'UTC',
 });
 ---
 
@@ -43,19 +52,27 @@ const dateFormatter = new Intl.DateTimeFormat('en-CA', {
   title={article.title}
   description={article.description}
   type="article"
+  lang={article.lang}
   article={{
     title: article.title,
     description: article.description,
     pubDate: article.pubDate,
+    lang: article.lang,
   }}
 >
   <article class="section" id="article" aria-labelledby="article-title">
     <div class="container">
       <header class="article-header" data-reveal>
-        <p class="eyebrow">Engineering</p>
+        {/* Chrome labels stay in the site language; the article body does not. */}
+        <p class="eyebrow" lang={site.locale}>Engineering</p>
         <h1 class="article-header__title" id="article-title">{article.title}</h1>
         <p class="article-header__meta">
-          <time datetime={article.pubDate}>{dateFormatter.format(new Date(article.pubDate))}</time>
+          {/* Dates render in the site language, so the element says so. */}
+          <time datetime={article.pubDate} lang={site.locale}>
+            {dateFormatter.format(new Date(article.pubDate))}
+          </time>
+          <span aria-hidden="true">·</span>
+          <a class="article-header__author" href={about.route}>{site.identity.displayName}</a>
         </p>
         <ul class="article-header__tags" aria-label="Topics">
           {article.tags.map((tag) => (
@@ -68,7 +85,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-CA', {
         <Content />
       </div>
 
-      <nav class="article-nav" aria-label="Back to Engineering">
+      <nav class="article-nav" aria-label="Back to Engineering" lang={site.locale}>
         <a href="/engineering">&larr; Back to Engineering</a>
         {article.relatedProject && (
           <a href={article.relatedProject}>Project: {article.relatedProjectName}</a>
@@ -92,6 +109,20 @@ const dateFormatter = new Intl.DateTimeFormat('en-CA', {
   .article-header__meta {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
+  }
+
+  /* Authorship: visible link to the author's /about page. */
+  .article-header__author {
+    color: var(--color-text-secondary);
+    border-block-end: 1px solid var(--color-border);
+    transition:
+      color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .article-header__author:hover {
+    color: var(--color-text);
+    border-block-end-color: var(--color-text);
   }
 
   .article-header__tags {

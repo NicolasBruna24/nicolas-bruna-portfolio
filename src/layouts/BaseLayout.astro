@@ -21,13 +21,27 @@ interface Props {
   article?: ArticleEntity;
   /** Marks the page as a schema.org ProfilePage, only for /about. */
   profilePage?: boolean;
+  /**
+   * Language of this page's main content. Defaults to the site language; a page
+   * whose body is written in another language (e.g. an article in Spanish)
+   * passes its own, so `<html lang>` describes the content rather than the UI.
+   */
+  lang?: string;
 }
 
-const { title, description, type, project, article, profilePage } = Astro.props;
+const { title, description, type, project, article, profilePage, lang = site.locale } =
+  Astro.props;
+
+/**
+ * Language of the shared chrome (skip link, navbar, footer). Marked explicitly
+ * only when it differs from the page content, so a page in another language
+ * still describes its English UI correctly.
+ */
+const chromeLang = lang === site.locale ? undefined : site.locale;
 ---
 
 <!doctype html>
-<html lang={site.locale}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,12 +69,12 @@ const { title, description, type, project, article, profilePage } = Astro.props;
     </script>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <Navbar />
+    <a class="skip-link" href="#main" lang={chromeLang}>Skip to content</a>
+    <Navbar lang={chromeLang} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={chromeLang} />
     <script>
       import '../scripts/ui';
     </script>

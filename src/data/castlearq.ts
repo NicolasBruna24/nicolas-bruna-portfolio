@@ -18,6 +18,11 @@ export interface ProjectAction {
   label: string;
   /** Public URL, or `null` while the link has not been published. */
   href: string | null;
+  /**
+   * `me` marks a link to a profile that verifiably belongs to the site's
+   * author (`rel="me"`). Absent for ordinary resource links.
+   */
+  rel?: 'me';
 }
 
 /** One step of a flow or a chain. `description` is optional for label-only steps. */
@@ -163,7 +168,13 @@ export interface CastleArqContent {
 const projectName = 'CastleArq';
 const seoDescription =
   'CastleArq is an open-source platform exploring a simpler way to configure and run local AI based on hardware, software and model requirements.';
-const repositoryUrl = 'https://github.com/NicolasBruna24/castlearq';
+/**
+ * Repository URL written with the canonical repository name (`CastleArq`), so
+ * the case study, the engineering article and the structured data all point at
+ * the same resource. The PyPI release is published from that repository.
+ */
+const repositoryUrl = 'https://github.com/NicolasBruna24/CastleArq';
+const packageUrl = 'https://pypi.org/project/castlearq/';
 
 export const castleArq: CastleArqContent = {
   route: '/projects/castlearq',
@@ -178,16 +189,18 @@ export const castleArq: CastleArqContent = {
     title: 'CastleArq — Local AI Orchestration Platform',
     description: seoDescription,
   },
-  // Repository and documentation URLs are public.
+  // Repository, documentation and distribution URLs are public.
   actions: [
     { label: 'View on GitHub', href: repositoryUrl },
     { label: 'Documentation', href: `${repositoryUrl}/blob/main/README.md` },
+    { label: 'Install from PyPI', href: packageUrl },
   ],
   entity: {
     type: 'SoftwareApplication',
     name: projectName,
     description: seoDescription,
     codeRepository: repositoryUrl,
+    installUrl: packageUrl,
   },
 
   problem: {

@@ -1,9 +1,16 @@
 ---
 import NavLinks from './NavLinks.astro';
 import { navigation, site } from '../data/site';
+
+interface Props {
+  /** Language of the chrome when it differs from the page content. */
+  lang?: string;
+}
+
+const { lang } = Astro.props;
 ---
 
-<header class="navbar" data-navbar>
+<header class="navbar" data-navbar lang={lang}>
   <div class="container navbar__inner">
     <a class="navbar__brand" href="/">{site.name}</a>
 

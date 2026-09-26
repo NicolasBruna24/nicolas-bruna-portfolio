@@ -124,6 +124,12 @@ const seoDescription =
   'SnapContext is an open-source AI coding assistant that detects the project, selects relevant files and prepares context for AI-assisted development workflows.';
 const repositoryUrl = 'https://github.com/NicolasBruna24/snapcontext';
 const packageUrl = 'https://pypi.org/project/snapcontext/';
+/**
+ * Published project site / documentation page, declared as the project's own
+ * website by the repository, so the case study links the same public resources
+ * the project itself publishes.
+ */
+const docsUrl = 'https://nicolasbruna24.github.io/snapcontext/';
 
 export const snapContext: SnapContextContent = {
   route: '/projects/snapcontext',
@@ -140,6 +146,7 @@ export const snapContext: SnapContextContent = {
   },
   actions: [
     { label: 'View on GitHub', href: repositoryUrl },
+    { label: 'Documentation', href: docsUrl },
     { label: 'Install from PyPI', href: packageUrl },
   ],
   entity: {

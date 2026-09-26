@@ -1,0 +1,87 @@
+---
+import { engineeringArticles } from '../../data/engineering';
+import { selectedProjects } from '../../data/projects';
+
+interface Props {
+  /** Route of the case study being viewed; excluded from its own related list. */
+  currentRoute: string;
+}
+
+const { currentRoute } = Astro.props;
+
+/**
+ * Related content is derived from existing data instead of being written per
+ * page: an engineering article declares the project it belongs to through
+ * `relatedProject`, and the other case studies come from the shared
+ * selected-work list. No relation is invented and nothing is hard-coded.
+ */
+const relatedArticle = engineeringArticles.find(
+  (entry) => entry.relatedProject === currentRoute,
+);
+
+const otherProjects = selectedProjects.flatMap((project) =>
+  project.href && project.href !== currentRoute ? [{ name: project.name, href: project.href }] : [],
+);
+---
+
+{
+  (relatedArticle || otherProjects.length > 0) && (
+    <nav class="related" aria-label="Related content">
+      {relatedArticle && (
+        <p class="related__row">
+          <span class="related__label">Engineering article</span>
+          <a
+            class="related__link"
+            href={`/engineering/${relatedArticle.slug}`}
+            lang={relatedArticle.lang}
+          >
+            {relatedArticle.title}
+          </a>
+        </p>
+      )}
+
+      {otherProjects.length > 0 && (
+        <p class="related__row">
+          <span class="related__label">Other case studies</span>
+          {otherProjects.map((project) => (
+            <a class="related__link" href={project.href}>
+              {project.name}
+            </a>
+          ))}
+        </p>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  /* Same language as the case-study back link: mono, quiet, one line per row. */
+  .related {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .related__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-5);
+  }
+
+  .related__label {
+    color: var(--color-text-muted);
+  }
+
+  .related__link {
+    color: var(--color-text-secondary);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .related__link:hover {
+    color: var(--color-text);
+  }
+</style>
