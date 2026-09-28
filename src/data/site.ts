@@ -80,6 +80,17 @@ export interface ArticleEntity {
   lang: string;
 }
 
+/** Default Open Graph image shared by all pages. */
+export interface OgImage {
+  /** Public path, e.g. "/og/og-default.png". */
+  src: string;
+  /** Recommended 1200x630 for og:image. */
+  width: number;
+  height: number;
+  /** Alt text for og:image:alt. */
+  alt: string;
+}
+
 export interface SiteConfig {
   name: string;
   role: string;
@@ -93,6 +104,8 @@ export interface SiteConfig {
   themeColor: string;
   /** Default meta description. */
   description: string;
+  /** Default Open Graph image (global fallback). */
+  ogImage: OgImage;
   /** Shared identity for structured data. */
   identity: SiteIdentity;
 }
@@ -155,6 +168,12 @@ export const site: SiteConfig = {
   themeColor: '#0A0A0A',
   description:
     'Portfolio of Nicolás Bruna, software developer working across full stack, AI and Linux. Selected work, process and case studies.',
+  ogImage: {
+    src: '/og/og-default.png',
+    width: 1200,
+    height: 630,
+    alt: 'Nicolás Bruna — Software Developer portfolio',
+  },
   identity,
 };
 
