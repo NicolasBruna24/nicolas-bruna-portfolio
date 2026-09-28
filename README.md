@@ -10,6 +10,17 @@ A record of the problems I investigate, the software I build, and what each proj
 - **SnapContext** — AI coding assistant with project-aware context preparation (open source)
 - **ProdLocales** — local product pricing web application (paused)
 
+## Identity
+
+Portfolio of Nicolás Bruna — software developer.
+
+- Portfolio: https://www.nicobrunaf.dev
+- GitHub: https://github.com/NicolasBruna24
+- LinkedIn: https://www.linkedin.com/in/nicol%C3%A1s-bruna-fuentealba-6086b8410/
+- CastleArq: https://github.com/NicolasBruna24/CastleArq
+- SnapContext: https://github.com/NicolasBruna24/snapcontext
+- ProdLocales: https://github.com/NicolasBruna24/marketplace-productos-locales
+
 ## Commands
 
 ```bash
@@ -82,7 +93,5 @@ src/
 
 ## Production domain
 
-The production domain is not yet configured. The `site` option in `astro.config.mjs` and
-the `url` field in `src/data/site.ts` are intentionally left empty, with a `TODO(publish)`
-marker, so `canonical` and `og:url` are omitted rather than guessed. Domain configuration
-belongs to a later phase.
+The production domain is `https://www.nicobrunaf.dev`. The `site` option in `astro.config.mjs` and
+the `url` field in `src/data/site.ts` are set to that origin, so `canonical` and `og:url` are emitted from it.

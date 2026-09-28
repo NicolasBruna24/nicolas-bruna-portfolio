@@ -19,6 +19,7 @@ import { site } from '../../data/site';
 
       <div class="hero__actions" data-reveal data-reveal-delay="4">
         <a class="btn btn--primary" href="#work">View selected work</a>
+        <a class="btn btn--ghost" href="/about">About me</a>
       </div>
     </div>
 
@@ -90,6 +91,9 @@ import { site } from '../../data/site';
   }
 
   .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
     margin-block-start: var(--space-2);
   }
 </style>

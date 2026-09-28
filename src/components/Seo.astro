@@ -7,6 +7,11 @@ interface Props {
   title?: string;
   description?: string;
   type?: 'website' | 'article';
+  /**
+   * Optional page-specific OG image (public path or absolute URL).
+   * Defaults to the global `site.ogImage`; reserved for future per-page images.
+   */
+  image?: string;
   /** Structured-data entity, only for pages that describe a project. */
   project?: ProjectEntity;
   /** Structured-data facts for an engineering article page. */
@@ -15,7 +20,7 @@ interface Props {
   profilePage?: boolean;
 }
 
-const { title, description = site.description, type = 'website', project, article, profilePage } = Astro.props;
+const { title, description = site.description, type = 'website', image, project, article, profilePage } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
 
@@ -26,6 +31,14 @@ const canonicalUrl = site.url ? new URL(Astro.url.pathname, site.url).href : '';
 // Canonical origin written with the trailing slash the site's own URLs use, so
 // every `url` in the structured data matches the canonical URL exactly.
 const siteUrl = `${site.url.replace(/\/+$/, '')}/`;
+
+// Global Open Graph image. `image` accepts a future page-specific public path or
+// absolute URL; otherwise the shared default from `site.ogImage` is used.
+const ogImageSrc = image ?? site.ogImage.src;
+const ogImageUrl = site.url ? new URL(ogImageSrc, site.url).href : '';
+const ogImageAlt = site.ogImage.alt;
+const ogImageWidth = site.ogImage.width;
+const ogImageHeight = site.ogImage.height;
 
 /**
  * Structured data for the person behind the site. Both entities use a stable
@@ -132,6 +145,7 @@ const identityJson = site.url
           description: site.description,
           inLanguage: site.locale,
           creator: { '@id': personId },
+          publisher: { '@id': personId },
         },
         ...(profilePageNode ? [profilePageNode] : []),
         ...projectNodes,
@@ -152,7 +166,12 @@ const identityJson = site.url
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
 {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-<meta name="twitter:card" content="summary" />
+{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+{ogImageUrl && <meta property="og:image:width" content={String(ogImageWidth)} />}
+{ogImageUrl && <meta property="og:image:height" content={String(ogImageHeight)} />}
+{ogImageUrl && <meta property="og:image:alt" content={ogImageAlt} />}
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
+{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 {identityJson && <script type="application/ld+json" is:inline set:html={identityJson} />}
